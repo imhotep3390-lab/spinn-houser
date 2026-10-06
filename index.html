@@ -66,8 +66,8 @@
     h1 {
       font-size: 26px;
       font-weight: 900;
-      margin-top: 40px;
-      margin-bottom: 20px;
+      margin-top: 20px;
+      margin-bottom: 15px;
       color: #c084fc;
       z-index: 2;
     }
@@ -95,4 +95,61 @@
 
     .center-cap {
       position: absolute;
-      top:
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px; height: 50px;
+      background: #1e1b4b;
+      border: 3px solid #c084fc;
+      border-radius: 50%;
+      z-index: 5;
+    }
+
+    canvas {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .controls-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 280px;
+      z-index: 2;
+    }
+
+    .btn-spin {
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      color: #fff;
+      border: none;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-spin:disabled { opacity: 0.5; }
+
+    .btn-inventory {
+      background: rgba(30, 27, 75, 0.9);
+      border: 1px solid #c084fc;
+      color: #fff;
+      padding: 10px 0;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .result {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #facc15;
+      min-height: 24px;
+    
