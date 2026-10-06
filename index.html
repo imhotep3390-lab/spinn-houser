@@ -14,9 +14,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       min-height: 100vh;
       padding: 20px;
+      padding-top: 50px;
     }
     .balance-bar {
       position: absolute;
@@ -31,188 +31,55 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      z-index: 50;
     }
     .bal-plus-btn {
       background: #a855f7; color: #fff; border: none;
       width: 26px; height: 26px; border-radius: 50%;
       font-weight: bold; cursor: pointer;
     }
-    h1 { font-size: 24px; color: #c084fc; margin-bottom: 20px; }
+    h1 { font-size: 24px; color: #c084fc; margin-bottom: 20px; text-align: center; }
     
+    .wheel-container {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin-bottom: 25px;
+    }
+    .pointer {
+      position: absolute; top: -12px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 22px solid #f43f5e;
+      z-index: 10;
+    }
     .wheel-box {
       width: 260px; height: 260px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #a855f7, #3b82f6, #ec4899);
+      background: conic-gradient(
+        #ec4899 0deg 72deg, 
+        #1e1b4b 72deg 144deg, 
+        #a855f7 144deg 216deg, 
+        #3b82f6 216deg 288deg, 
+        #06b6d4 288deg 360deg
+      );
+      border: 4px solid #c084fc;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
       transition: transform 4s cubic-bezier(0.15, 0.85, 0.35, 1);
-      margin-bottom: 20px;
     }
     .wheel-inner {
-      width: 220px; height: 220px;
+      width: 70px; height: 70px;
       background: #0f172a;
+      border: 3px solid #c084fc;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-      padding: 10px;
-    }
-    .pointer {
-      position: absolute; top: -10px;
-      width: 0; height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 20px solid #f43f5e;
-    }
-    
-    .btn {
-      background: linear-gradient(135deg, #a855f7, #6366f1);
-      color: #fff; border: none; padding: 14px 30px;
-      font-size: 16px; font-weight: bold; border-radius: 25px;
-      cursor: pointer; width: 260px; margin-bottom: 10px;
-    }
-    .btn:disabled { opacity: 0.5; }
-    .btn-inv { background: #1e1b4b; border: 1px solid #a855f7; }
-    
-    .result { font-size: 16px; color: #facc15; min-height: 24px; text-align: center; margin-top: 10px; }
-
-    .modal {
-      position: fixed; bottom: -100%; left: 0; right: 0;
-      background: #1e1b4b; border-top: 3px solid #a855f7;
-      border-radius: 25px 25px 0 0; padding: 20px;
-      transition: bottom 0.3s; text-align: center; z-index: 100;
-    }
-    .modal.show { bottom: 0; }
-    .action-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-top: 8px; cursor: pointer; }
-    .btn-claim { background: #10b981; color: #fff; }
-    .btn-sell { background: #eab308; color: #000; }
-    
-    .inv-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-      max-height: 200px; overflow-y: auto; margin: 15px 0;
-    }
-    .inv-card {
-      background: #0f172a; border: 1px solid #a855f7; border-radius: 10px;
-      padding: 8px; display: flex; flex-direction: column; align-items: center; cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="balance-bar">
-    <span id="bal">10</span> ⭐
-    <button class="bal-plus-btn" onclick="topUp()">+</button>
-  </div>
-
-  <h1>GALAXY SPIN</h1>
-
-  <div style="position: relative;">
-    <div class="pointer"></div>
-    <div class="wheel-box" id="wheel">
-      <div class="wheel-inner" id="wheelText">Крути!</div>
-    </div>
-  </div>
-
-  <button class="btn" id="spinBtn" onclick="spin()">КРУТИТЬ (5 ⭐)</button>
-  <button class="btn btn-inv" onclick="openInv()">🎒 Инвентарь</button>
-  <div class="result" id="res"></div>
-
-  <!-- Модалка выигрыша -->
-  <div class="modal" id="modal">
-    <div id="mIcon" style="font-size: 40px;">🎁</div>
-    <h3 id="mTitle" style="margin: 10px 0;">Приз</h3>
-    <button class="action-btn btn-claim" onclick="toInv()">🎒 В инвентарь</button>
-    <button class="action-btn btn-sell" id="mSellBtn" onclick="sellInstant()">⭐ Продать</button>
-  </div>
-
-  <!-- Модалка инвентаря -->
-  <div class="modal" id="invModal">
-    <h3>Инвентарь</h3>
-    <div class="inv-grid" id="invGrid"></div>
-    <button class="action-btn" style="background:#475569; color:#fff;" onclick="closeInv()">Закрыть</button>
-  </div>
-
-  <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) tg.expand();
-
-    let balance = parseInt(localStorage.getItem('bal')) || 10;
-    let inv = JSON.parse(localStorage.getItem('inv')) || [];
-    let currentPrize = null;
-    let currentDeg = 0;
-
-    const prizes = [
-      { id: 'ring', name: '💍 Кольцо', val: 100 },
-      { id: 'bouquet', name: '💐 Букет', val: 50 },
-      { id: 'box', name: '🎁 Коробка', val: 25 },
-      { id: 'bear', name: '🧸 Мишка', val: 15 },
-      { id: 'empty', name: 'Пусто', val: 0 }
-    ];
-
-    function update() {
-      document.getElementById('bal').innerText = balance;
-      localStorage.setItem('bal', balance);
-      localStorage.setItem('inv', JSON.stringify(inv));
-    }
-
-    function topUp() {
-      const url = "https://t.me/Houser_i_bot?start=pay";
-      if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
-      else window.location.href = url;
-    }
-
-    function spin() {
-      if (balance < 5) return;
-      balance -= 5;
-      update();
-
-      document.getElementById('spinBtn').disabled = true;
-      document.getElementById('res').innerText = "Крутится...";
-
-      // Рандомный приз
-      const rand = Math.random() * 100;
-      let prize = prizes[4]; // пусто по умолчанию
-      if (rand < 2) prize = prizes[0];
-      else if (rand < 10) prize = prizes[1];
-      else if (rand < 25) prize = prizes[2];
-      else if (rand < 45) prize = prizes[3];
-
-      currentPrize = prize;
-
-      // Крутим колесо
-      currentDeg += 1440 + Math.floor(Math.random() * 360);
-      const wheel = document.getElementById('wheel');
-      wheel.style.transform = `rotate(${currentDeg}deg)`;
-
-      setTimeout(() => {
-        document.getElementById('spinBtn').disabled = false;
-        if (prize.val > 0) {
-          document.getElementById('mTitle').innerText = prize.name;
-          document.getElementById('mSellBtn').innerText = `Продать за ${prize.val} ⭐`;
-          document.getElementById('modal').classList.add('show');
-          document.getElementById('res').innerText = `Выпало: ${prize.name}!`;
-        } else {
-          document.getElementById('res').innerText = "Ничего не выиграл :(";
-        }
-      }, 4000);
-    }
-
-    function toInv() {
-      if (currentPrize) {
-        inv.push(currentPrize);
-        update();
-        document.getElementById('res').innerText = `Добавлено в инвентарь: ${currentPrize.name}`;
-      }
-      document.getElementById('modal').classList.remove('show');
-    }
-
-    function sellInstant() {
-      if (currentPrize) {
-        balance
+      font-size
     
