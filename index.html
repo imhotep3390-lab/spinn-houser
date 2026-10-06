@@ -152,4 +152,89 @@
       font-weight: bold;
       color: #facc15;
       min-height: 24px;
-    
+      z-index: 2;
+      text-align: center;
+    }
+
+    .modal {
+      position: fixed;
+      bottom: -100%;
+      left: 0; right: 0;
+      background: #1e1b4b;
+      border-top: 3px solid #a855f7;
+      border-radius: 25px 25px 0 0;
+      padding: 20px;
+      z-index: 90;
+      transition: bottom 0.4s ease;
+      text-align: center;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal.show { bottom: 0; }
+
+    .action-btn {
+      width: 100%; padding: 12px; border-radius: 12px; border: none;
+      font-size: 15px; font-weight: bold; margin-top: 8px; cursor: pointer;
+    }
+    .btn-claim { background: #10b981; color: #fff; }
+    .btn-exchange { background: #eab308; color: #000; }
+    .btn-close { background: #475569; color: #fff; margin-top: 15px; }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+      overflow-y: auto;
+      max-height: 250px;
+      padding: 5px;
+    }
+
+    .inventory-item {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 12px;
+      padding: 10px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .inventory-item:active { transform: scale(0.95); }
+    .item-icon { font-size: 32px; }
+    .item-name { font-size: 12px; margin-top: 4px; color: #cbd5e1; }
+    .item-price { font-size: 11px; color: #facc15; font-weight: bold; }
+    .item-count {
+      position: absolute;
+      top: 4px; right: 6px;
+      background: #a855f7;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="space-bg"></div>
+
+  <div class="balance-bar">
+    <span id="balanceVal">10</span> ⭐
+    <button class="bal-plus-btn" onclick="openDeposit()">+</button>
+  </div>
+
+  <h1>GALAXY SPIN</h1>
+
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div class="center-cap"></div>
+    <canvas id="wheel" width="280" height="280"></canvas>
+  </div>
+
+  <div class="controls-group">
+    <button class="btn-spin" id="spinBtn
+      
