@@ -58,6 +58,9 @@
       border-radius: 50%;
       font-weight: bold;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     h1 {
@@ -206,9 +209,12 @@
       }
     }
 
+    // Перенаправление прямиком в диалог с ботом @Houser_i_bot на команду пополнения
     function openDeposit() {
       if (tg) {
-        tg.openTelegramLink("https://t.me/Houser_i_bot?start=donate");
+        tg.openTelegramLink("https://t.me/Houser_i_bot?start=pay");
+      } else {
+        window.location.href = "https://t.me/Houser_i_bot?start=pay";
       }
     }
 
