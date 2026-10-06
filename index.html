@@ -163,7 +163,7 @@
     <h3 style="color: #c084fc;">Пополнить ⭐</h3>
     <p style="font-size: 13px; color: #cbd5e1; margin-top: 5px;">Введите количество звезд:</p>
     <input type="number" id="starsInput" class="input-amount" value="50" min="1">
-    <button class="action-btn btn-claim" onclick="payStars()">Купить звезды</button>
+    <button class="action-btn btn-claim" onclick="payStars()">Перейти к оплате в ТГ</button>
     <button class="action-btn" style="background:#475569; color:#fff;" onclick="closeDepositModal()">Отмена</button>
   </div>
 
@@ -202,15 +202,11 @@
       const amount = parseInt(document.getElementById('starsInput').value) || 10;
       closeDepositModal();
       
-      // Если бот поддерживает инвойсы через WebApp
-      if (tg && tg.openInvoice) {
-        // Здесь можно вызвать нативный инвойс, если бэкенд бота генерирует url инвойса.
-        // Иначе временно добавляем баланс для теста или перенаправляем на текстовую команду боту:
-        alert(`Запрос на покупку ${amount} ⭐ отправлен.`);
+      const botUrl = `https://t.me/Houser_i_bot?start=pay_${amount}`;
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(botUrl);
       } else {
-        balance += amount; // Временное демо-пополнение для проверки интерфейса
-        update();
-        document.getElementById('res').innerText = `Баланс пополнен на +${amount} ⭐!`;
+        window.location.href = botUrl;
       }
     }
 
@@ -257,6 +253,7 @@
         update();
         document.getElementById('res').innerText = `Добавлено в инвентарь: ${currentPrize.name}`;
       }
+      document.getElementById('modal').classList.remove('string');
       document.getElementById('modal').classList.remove('show');
     }
 
@@ -292,6 +289,7 @@
     }
 
     function closeInv() {
+      document.getElementById('invModal').classList.add('string');
       document.getElementById('invModal').classList.remove('show');
     }
 
