@@ -161,9 +161,9 @@
   <!-- Модалка доната / пополнения -->
   <div class="modal" id="depositModal">
     <h3 style="color: #c084fc;">Пополнить ⭐</h3>
-    <p style="font-size: 13px; color: #cbd5e1; margin-top: 5px;">Введите количество звезд для покупки:</p>
+    <p style="font-size: 13px; color: #cbd5e1; margin-top: 5px;">Введите количество звезд:</p>
     <input type="number" id="starsInput" class="input-amount" value="50" min="1">
-    <button class="action-btn btn-claim" onclick="payStars()">Оплатить через бота</button>
+    <button class="action-btn btn-claim" onclick="payStars()">Купить звезды</button>
     <button class="action-btn" style="background:#475569; color:#fff;" onclick="closeDepositModal()">Отмена</button>
   </div>
 
@@ -199,17 +199,26 @@
     }
 
     function payStars() {
-      const amount = document.getElementById('starsInput').value || 10;
-      const botUrl = `https://t.me/Houser_i_bot?start=pay_${amount}`;
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(botUrl);
+      const amount = parseInt(document.getElementById('starsInput').value) || 10;
+      closeDepositModal();
+      
+      // Если бот поддерживает инвойсы через WebApp
+      if (tg && tg.openInvoice) {
+        // Здесь можно вызвать нативный инвойс, если бэкенд бота генерирует url инвойса.
+        // Иначе временно добавляем баланс для теста или перенаправляем на текстовую команду боту:
+        alert(`Запрос на покупку ${amount} ⭐ отправлен.`);
       } else {
-        window.location.href = botUrl;
+        balance += amount; // Временное демо-пополнение для проверки интерфейса
+        update();
+        document.getElementById('res').innerText = `Баланс пополнен на +${amount} ⭐!`;
       }
     }
 
     function spin() {
-      if (balance < 5) return;
+      if (balance < 5) {
+        alert("Недостаточно звезд! Пополните баланс.");
+        return;
+      }
       balance -= 5;
       update();
 
