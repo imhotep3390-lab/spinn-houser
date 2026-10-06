@@ -19,8 +19,8 @@
       padding-top: 50px;
     }
     .balance-bar {
-      position: absolute;
-      top: 15px; right: 15px;
+      position: fixed;
+      top: 15px; left: 15px;
       background: rgba(30, 27, 75, 0.9);
       border: 1px solid rgba(168, 85, 247, 0.5);
       padding: 6px 14px;
@@ -115,13 +115,19 @@
       background: #0f172a; border: 1px solid #a855f7; border-radius: 12px;
       padding: 10px 5px; display: flex; flex-direction: column; align-items: center; cursor: pointer;
     }
+
+    .input-amount {
+      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #a855f7;
+      background: #0f172a; color: #fff; font-size: 18px; text-align: center; margin: 15px 0;
+      outline: none;
+    }
   </style>
 </head>
 <body>
 
   <div class="balance-bar">
     <span id="bal">10</span> ⭐
-    <button class="bal-plus-btn" onclick="topUp()">+</button>
+    <button class="bal-plus-btn" onclick="openDepositModal()">+</button>
   </div>
 
   <h1>GALAXY SPIN</h1>
@@ -152,6 +158,15 @@
     <button class="action-btn" style="background:#475569; color:#fff;" onclick="closeInv()">Закрыть</button>
   </div>
 
+  <!-- Модалка доната / пополнения -->
+  <div class="modal" id="depositModal">
+    <h3 style="color: #c084fc;">Пополнить ⭐</h3>
+    <p style="font-size: 13px; color: #cbd5e1; margin-top: 5px;">Введите количество звезд для покупки:</p>
+    <input type="number" id="starsInput" class="input-amount" value="50" min="1">
+    <button class="action-btn btn-claim" onclick="payStars()">Оплатить через бота</button>
+    <button class="action-btn" style="background:#475569; color:#fff;" onclick="closeDepositModal()">Отмена</button>
+  </div>
+
   <script>
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
@@ -175,10 +190,22 @@
       localStorage.setItem('inv', JSON.stringify(inv));
     }
 
-    function topUp() {
-      const url = "https://t.me/Houser_i_bot?start=pay";
-      if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
-      else window.location.href = url;
+    function openDepositModal() {
+      document.getElementById('depositModal').classList.add('show');
+    }
+
+    function closeDepositModal() {
+      document.getElementById('depositModal').classList.remove('show');
+    }
+
+    function payStars() {
+      const amount = document.getElementById('starsInput').value || 10;
+      const botUrl = `https://t.me/Houser_i_bot?start=pay_${amount}`;
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(botUrl);
+      } else {
+        window.location.href = botUrl;
+      }
     }
 
     function spin() {
