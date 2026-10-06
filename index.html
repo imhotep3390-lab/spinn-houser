@@ -14,7 +14,7 @@
     body {
       background: #030014;
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -25,31 +25,24 @@
       position: relative;
     }
 
-    /* Фон */
     .space-bg {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(147, 51, 234, 0.25) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, #030014 100%);
+      background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, #030014 100%);
       z-index: 0;
     }
 
-    /* Бар баланса */
     .balance-bar {
       position: absolute;
       top: 15px;
       right: 15px;
       background: rgba(30, 27, 75, 0.8);
       border: 1px solid rgba(168, 85, 247, 0.5);
-      backdrop-filter: blur(10px);
       padding: 6px 14px;
       border-radius: 25px;
       font-size: 16px;
       font-weight: 700;
       color: #facc15;
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
       display: flex;
       align-items: center;
       gap: 10px;
@@ -64,12 +57,7 @@
       height: 26px;
       border-radius: 50%;
       font-weight: bold;
-      font-size: 18px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
     }
 
     h1 {
@@ -77,55 +65,47 @@
       font-weight: 900;
       margin-top: 40px;
       margin-bottom: 20px;
-      text-align: center;
       color: #c084fc;
-      text-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
       z-index: 2;
     }
 
-    /* Колесо */
     .wheel-container {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       margin-bottom: 20px;
       z-index: 2;
     }
 
     .pointer {
       position: absolute;
-      top: -18px;
+      top: -15px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-top: 28px solid #f43f5e;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 24px solid #f43f5e;
       z-index: 10;
-      filter: drop-shadow(0 0 10px #f43f5e);
     }
 
     .center-cap {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 54px;
-      height: 54px;
-      background: radial-gradient(circle, #38bdf8 0%, #1e1b4b 100%);
+      width: 50px; height: 50px;
+      background: #1e1b4b;
       border: 3px solid #c084fc;
       border-radius: 50%;
       z-index: 5;
-      box-shadow: 0 0 15px #38bdf8;
     }
 
     canvas {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      height: 100%;
+      width: 280px;
+      height: 280px;
       border-radius: 50%;
+      z-index: 2;
     }
 
     .btn-spin {
@@ -137,25 +117,20 @@
       font-weight: bold;
       border-radius: 30px;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-      transition: transform 0.1s;
       z-index: 2;
     }
 
-    .btn-spin:active { transform: scale(0.95); }
-    .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-spin:disabled { opacity: 0.5; }
 
     .result {
       margin-top: 15px;
       font-size: 18px;
       font-weight: bold;
-      text-align: center;
-      min-height: 28px;
       color: #facc15;
+      min-height: 28px;
       z-index: 2;
     }
 
-    /* Поп-ап подарка */
     .gift-modal {
       position: fixed;
       bottom: -100%;
@@ -169,6 +144,7 @@
       text-align: center;
     }
     .gift-modal.show { bottom: 0; }
+
     .action-btn {
       width: 100%; padding: 12px; border-radius: 12px; border: none;
       font-size: 15px; font-weight: bold; margin-top: 8px; cursor: pointer;
@@ -181,7 +157,6 @@
 
   <div class="space-bg"></div>
 
-  <!-- Баланс -->
   <div class="balance-bar">
     <span id="balanceVal">10</span> ⭐
     <button class="bal-plus-btn" onclick="openDeposit()">+</button>
@@ -192,13 +167,12 @@
   <div class="wheel-container">
     <div class="pointer"></div>
     <div class="center-cap"></div>
-    <canvas id="wheel" width="600" height="600"></canvas>
+    <canvas id="wheel" width="280" height="280"></canvas>
   </div>
 
   <button class="btn-spin" id="spinBtn" onclick="spin()">КРУТИТЬ (5 ⭐)</button>
   <div class="result" id="resultText"></div>
 
-  <!-- Окно Выигрыша -->
   <div class="gift-modal" id="giftModal">
     <div style="font-size: 50px;">🎁</div>
     <h3 id="giftTitle" style="margin-top: 5px;">Приз!</h3>
@@ -233,21 +207,18 @@
     }
 
     function openDeposit() {
-      // Перенаправляем прямо в чат с ботом для покупки звезд
       if (tg) {
         tg.openTelegramLink("https://t.me/Houser_i_bot?start=donate");
-      } else {
-        alert("Перейдите в бота для пополнения!");
       }
     }
 
     const sectors = [
-      { label: "100 ⭐", value: 100, color: "#ec4899" },
-      { label: "ПУСТО", value: 0, color: "#1e1b4b" },
-      { label: "50 ⭐", value: 50, color: "#a855f7" },
-      { label: "ПУСТО", value: 0, color: "#0f172a" },
-      { label: "25 ⭐", value: 25, color: "#3b82f6" },
-      { label: "15 ⭐", value: 15, color: "#06b6d4" }
+      { label: "100 STAR", value: 100, color: "#ec4899" },
+      { label: "EMPTY", value: 0, color: "#1e1b4b" },
+      { label: "50 STAR", value: 50, color: "#a855f7" },
+      { label: "EMPTY", value: 0, color: "#0f172a" },
+      { label: "25 STAR", value: 25, color: "#3b82f6" },
+      { label: "15 STAR", value: 15, color: "#06b6d4" }
     ];
 
     const numSectors = sectors.length;
@@ -256,8 +227,8 @@
     let isSpinning = false;
 
     function drawWheel() {
-      const radius = canvas.width / 2;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const radius = 140;
+      ctx.clearRect(0, 0, 280, 280);
 
       for (let i = 0; i < numSectors; i++) {
         const angle = currentAngle + i * arc;
@@ -270,27 +241,27 @@
         ctx.fill();
 
         ctx.strokeStyle = '#c084fc';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         ctx.save();
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 28px sans-serif";
+        ctx.font = "bold 16px sans-serif";
         ctx.textAlign = "right";
         ctx.translate(radius, radius);
         ctx.rotate(angle + arc / 2);
-        ctx.fillText(sectors[i].label, radius - 35, 10);
+        ctx.fillText(sectors[i].label, radius - 20, 5);
         ctx.restore();
       }
     }
 
     function getRandomSectorIndex() {
       const rand = Math.random() * 100;
-      if (rand < 1) return 0;      // 100 ⭐ (1%)
-      if (rand < 6) return 2;      // 50 ⭐ (5%)
-      if (rand < 16) return 4;     // 25 ⭐ (10%)
-      if (rand < 31) return 5;     // 15 ⭐ (15%)
-      return Math.random() < 0.5 ? 1 : 3; // ПУСТО (69%)
+      if (rand < 1) return 0;
+      if (rand < 6) return 2;
+      if (rand < 16) return 4;
+      if (rand < 31) return 5;
+      return Math.random() < 0.5 ? 1 : 3;
     }
 
     function spin() {
@@ -310,5 +281,62 @@
       const currentMod = currentAngle % (2 * Math.PI);
       const targetAngle = currentAngle + extraRotations + (targetAngleOnCircle - currentMod + 2 * Math.PI) % (2 * Math.PI);
 
+      const duration = 4000;
+      const startAngle = currentAngle;
+      const startTime = performance.now();
 
-    
+      function animate(time) {
+        let elapsed = time - startTime;
+        if (elapsed > duration) elapsed = duration;
+
+        const progress = elapsed / duration;
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        currentAngle = startAngle + (targetAngle - startAngle) * easeOut;
+        drawWheel();
+
+        if (elapsed < duration) {
+          requestAnimationFrame(animate);
+        } else {
+          isSpinning = false;
+          showResult(winningIndex);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function showResult(index) {
+      currentPrize = sectors[index];
+
+      if (currentPrize.value > 0) {
+        document.getElementById('giftTitle').innerText = `Вы выиграли ${currentPrize.label}!`;
+        document.getElementById('giftModal').classList.add('show');
+      } else {
+        resultText.innerText = "Увы, в этот раз пусто!";
+      }
+
+      updateUI();
+    }
+
+    function claimGift() {
+      userBalance += currentPrize.value;
+      updateUI();
+      resultText.innerText = `🎁 Вы получили ${currentPrize.label}!`;
+      document.getElementById('giftModal').classList.remove('show');
+    }
+
+    function exchangeGift() {
+      if (currentPrize) {
+        userBalance += currentPrize.value;
+        resultText.innerText = `⭐ Обменяно на +${currentPrize.value} ⭐!`;
+      }
+      document.getElementById('giftModal').classList.remove('show');
+      updateUI();
+    }
+
+    updateUI();
+    drawWheel();
+  </script>
+</body>
+</html>
