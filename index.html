@@ -6,7 +6,11 @@
   <title>Galaxy Spin</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
       background: #030014;
       color: #ffffff;
@@ -20,6 +24,8 @@
       overflow: hidden;
       position: relative;
     }
+
+    /* Фон */
     .space-bg {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -29,6 +35,8 @@
         radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, #030014 100%);
       z-index: 0;
     }
+
+    /* Бар баланса */
     .balance-bar {
       position: absolute;
       top: 15px;
@@ -47,6 +55,7 @@
       gap: 10px;
       z-index: 10;
     }
+
     .bal-plus-btn {
       background: #a855f7;
       color: #fff;
@@ -62,6 +71,7 @@
       justify-content: center;
       box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
     }
+
     h1 {
       font-size: 26px;
       font-weight: 900;
@@ -72,6 +82,8 @@
       text-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
       z-index: 2;
     }
+
+    /* Колесо */
     .wheel-container {
       position: relative;
       width: 320px;
@@ -79,6 +91,7 @@
       margin-bottom: 20px;
       z-index: 2;
     }
+
     .pointer {
       position: absolute;
       top: -18px;
@@ -92,17 +105,21 @@
       z-index: 10;
       filter: drop-shadow(0 0 10px #f43f5e);
     }
+
     .center-cap {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      width: 54px; height: 54px;
+      width: 54px;
+      height: 54px;
       background: radial-gradient(circle, #38bdf8 0%, #1e1b4b 100%);
       border: 3px solid #c084fc;
       border-radius: 50%;
       z-index: 5;
       box-shadow: 0 0 15px #38bdf8;
     }
+
     canvas {
       position: relative;
       z-index: 2;
@@ -110,6 +127,7 @@
       height: 100%;
       border-radius: 50%;
     }
+
     .btn-spin {
       background: linear-gradient(135deg, #a855f7, #6366f1);
       color: #fff;
@@ -123,8 +141,10 @@
       transition: transform 0.1s;
       z-index: 2;
     }
+
     .btn-spin:active { transform: scale(0.95); }
     .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; }
+
     .result {
       margin-top: 15px;
       font-size: 18px;
@@ -134,46 +154,8 @@
       color: #facc15;
       z-index: 2;
     }
-    .modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(3, 0, 20, 0.85);
-      backdrop-filter: blur(10px);
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-content {
-      background: #1e1b4b;
-      border: 2px solid #a855f7;
-      border-radius: 24px;
-      padding: 25px;
-      width: 100%;
-      max-width: 300px;
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
-      position: relative;
-      text-align: center;
-    }
-    .close-btn {
-      position: absolute;
-      top: 15px; right: 15px;
-      background: none; border: none;
-      color: #a855f7; font-size: 22px; cursor: pointer;
-    }
-    .deposit-option {
-      background: rgba(168, 85, 247, 0.2);
-      border: 1px solid #a855f7;
-      color: #fff;
-      padding: 12px;
-      border-radius: 12px;
-      width: 100%;
-      margin-top: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+
+    /* Поп-ап подарка */
     .gift-modal {
       position: fixed;
       bottom: -100%;
@@ -199,6 +181,7 @@
 
   <div class="space-bg"></div>
 
+  <!-- Баланс -->
   <div class="balance-bar">
     <span id="balanceVal">10</span> ⭐
     <button class="bal-plus-btn" onclick="openDeposit()">+</button>
@@ -215,17 +198,7 @@
   <button class="btn-spin" id="spinBtn" onclick="spin()">КРУТИТЬ (5 ⭐)</button>
   <div class="result" id="resultText"></div>
 
-  <div class="modal" id="depositModal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeDeposit()">✕</button>
-      <h3>⭐ Пополнение</h3>
-      <p style="margin-top: 10px; color: #94a3b8; font-size: 14px;">Выберите сумму ⭐:</p>
-      <button class="deposit-option" onclick="addBalance(20)">+20 ⭐</button>
-      <button class="deposit-option" onclick="addBalance(50)">+50 ⭐</button>
-      <button class="deposit-option" onclick="addBalance(100)">+100 ⭐</button>
-    </div>
-  </div>
-
+  <!-- Окно Выигрыша -->
   <div class="gift-modal" id="giftModal">
     <div style="font-size: 50px;">🎁</div>
     <h3 id="giftTitle" style="margin-top: 5px;">Приз!</h3>
@@ -259,13 +232,13 @@
       }
     }
 
-    function openDeposit() { document.getElementById('depositModal').style.display = 'flex'; }
-    function closeDeposit() { document.getElementById('depositModal').style.display = 'none'; }
-    
-    function addBalance(amount) {
-      userBalance += amount;
-      updateUI();
-      closeDeposit();
+    function openDeposit() {
+      // Перенаправляем прямо в чат с ботом для покупки звезд
+      if (tg) {
+        tg.openTelegramLink("https://t.me/Houser_i_bot?start=donate");
+      } else {
+        alert("Перейдите в бота для пополнения!");
+      }
     }
 
     const sectors = [
@@ -313,11 +286,11 @@
 
     function getRandomSectorIndex() {
       const rand = Math.random() * 100;
-      if (rand < 1) return 0;
-      if (rand < 6) return 2;
-      if (rand < 16) return 4;
-      if (rand < 31) return 5;
-      return Math.random() < 0.5 ? 1 : 3;
+      if (rand < 1) return 0;      // 100 ⭐ (1%)
+      if (rand < 6) return 2;      // 50 ⭐ (5%)
+      if (rand < 16) return 4;     // 25 ⭐ (10%)
+      if (rand < 31) return 5;     // 15 ⭐ (15%)
+      return Math.random() < 0.5 ? 1 : 3; // ПУСТО (69%)
     }
 
     function spin() {
@@ -337,62 +310,5 @@
       const currentMod = currentAngle % (2 * Math.PI);
       const targetAngle = currentAngle + extraRotations + (targetAngleOnCircle - currentMod + 2 * Math.PI) % (2 * Math.PI);
 
-      const duration = 4000;
-      const startAngle = currentAngle;
-      const startTime = performance.now();
 
-      function animate(time) {
-        let elapsed = time - startTime;
-        if (elapsed > duration) elapsed = duration;
-
-        const progress = elapsed / duration;
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-
-        currentAngle = startAngle + (targetAngle - startAngle) * easeOut;
-        drawWheel();
-
-        if (elapsed < duration) {
-          requestAnimationFrame(animate);
-        } else {
-          isSpinning = false;
-          showResult(winningIndex);
-        }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    function showResult(index) {
-      currentPrize = sectors[index];
-
-      if (currentPrize.value > 0) {
-        document.getElementById('giftTitle').innerText = `Вы выиграли ${currentPrize.label}!`;
-        document.getElementById('giftModal').classList.add('show');
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      } else {
-        resultText.innerText = "Увы, в этот раз пусто! 🚀";
-      }
-
-      updateUI();
-    }
-
-    function claimGift() {
-      if (tg) tg.sendData(JSON.stringify({ action: "claim", prize: currentPrize.label }));
-      resultText.innerText = `🎁 Подарок "${currentPrize.label}" забран!`;
-      document.getElementById('giftModal').classList.remove('show');
-    }
-
-    function exchangeGift() {
-      if (currentPrize) {
-        userBalance += currentPrize.value;
-        resultText.innerText = `⭐ Обменяно на +${currentPrize.value} ⭐!`;
-      }
-      document.getElementById('giftModal').classList.remove('show');
-      updateUI();
-    }
-
-    updateUI();
-    drawWheel();
-  </script>
-</body>
-</html>
+    
