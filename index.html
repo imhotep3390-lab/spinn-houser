@@ -127,21 +127,29 @@
       justify-content: center;
     }
 
-    .pointer {
+    /* Вращающийся слой стрелки */
+    .arrow-layer {
       position: absolute;
-      top: -22px;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .spinner-arrow {
+      position: absolute;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
       width: 32px;
-      height: 42px;
-      z-index: 10;
+      height: 48px;
       filter: drop-shadow(0 0 12px #f43f5e);
     }
-    .pointer-shape {
+    .spinner-arrow-shape {
       width: 100%;
       height: 100%;
       background: linear-gradient(180deg, #ff4b72, #9f1239);
-      clip-path: polygon(50% 100%, 0 0, 50% 20%, 100% 0);
+      clip-path: polygon(50% 100%, 0 0, 50% 25%, 100% 0);
       border-radius: 4px;
     }
 
@@ -153,7 +161,7 @@
       background: radial-gradient(circle, #38bdf8 0%, #030014 90%);
       border: 3px solid #a855f7;
       border-radius: 50%;
-      z-index: 5;
+      z-index: 12;
       box-shadow: 0 0 20px #38bdf8;
       display: flex; align-items: center; justify-content: center;
     }
@@ -167,9 +175,241 @@
       position: relative;
       z-index: 3;
       border-radius: 50%;
+      display: block;
     }
 
     .btn-spin {
       margin-top: 25px;
-      background: linear-gradient(135deg,
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite;
+      color: #fff;
+      border: none;
+      padding: 16px 40px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.6);
+      transition: all 0.2s;
+      z-index: 2;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .btn-spin:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 0, 20, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #1e1b4b;
+      border: 2px solid #a855f7;
+      border-radius: 24px;
+      padding: 25px;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: none; border: none;
+      color: #a855f7; font-size: 22px; cursor: pointer;
+    }
+    .nav-tabs {
+      display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid rgba(168, 85, 247, 0.3); padding-bottom: 10px;
+    }
+    .tab-btn {
+      background: none; border: none; color: #a855f7; font-weight: 700; cursor: pointer; padding: 5px 8px; font-size: 14px;
+    }
+    .tab-btn.active {
+      color: #38bdf8; border-bottom: 2px solid #38bdf8;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .gift-modal {
+      position: fixed;
+      bottom: -100%;
+      left: 0; right: 0;
+      background: linear-gradient(180deg, #1e1b4b 0%, #090d16 100%);
+      border-top: 3px solid #ec4899;
+      border-radius: 30px 30px 0 0;
+      padding: 30px 20px;
+      z-index: 90;
+      box-shadow: 0 -10px 40px rgba(236, 72, 153, 0.5);
+      transition: bottom 0.4s ease-in-out;
+      text-align: center;
+    }
+    .gift-modal.show {
+      bottom: 0;
+    }
+    .gift-icon {
+      font-size: 60px;
+      margin-bottom: 10px;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 15px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .btn-claim { background: #10b981; color: #fff; }
+    .btn-exchange { background: #3b82f6; color: #fff; }
+
+    .result-status {
+      margin-top: 15px; font-size: 16px; min-height: 24px; color: #facc15; font-weight: 700; text-align: center; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="space-bg"></div>
+
+  <div class="top-bar">
+    <button class="settings-btn" onclick="openModal()">⚙️</button>
+
+    <div class="balance-bar">
+      <button class="bal-btn" onclick="changeBalance(-5)">-</button>
+      <span id="balanceVal">10</span> ⭐
+      <button class="bal-btn" onclick="changeBalance(10)">+</button>
+    </div>
+  </div>
+
+  <h1>GALAXY SPIN</h1>
+
+  <div class="wheel-wrapper">
+    <!-- Слой стрелки -->
+    <div class="arrow-layer" id="arrowLayer">
+      <div class="spinner-arrow">
+        <div class="spinner-arrow-shape"></div>
+      </div>
+    </div>
+
+    <!-- Колесо -->
+    <div class="wheel-frame">
+      <canvas id="wheel" width="600" height="600" style="width: 290px; height: 290px;"></canvas>
+    </div>
+    <div class="center-cap"></div>
+  </div>
+
+  <button class="btn-spin" id="spinBtn" onclick="spin()">КРУТИТЬ (5 ⭐)</button>
+  <div class="result-status" id="resultText"></div>
+
+  <div class="modal" id="menuModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      
+      <div class="nav-tabs">
+        <button class="tab-btn active" id="btn-profile" onclick="switchTab('profile')">Профиль</button>
+        <button class="tab-btn" id="btn-balance" onclick="switchTab('balance')">Баланс</button>
+        <button class="tab-btn" id="btn-deposit" onclick="switchTab('deposit')">Пополнение</button>
+      </div>
+
+      <div class="tab-content active" id="tab-profile">
+        <h3>👤 Профиль</h3>
+        <p style="margin-top: 10px; color: #cbd5e1;" id="usernameText">Игрок: Telegram User</p>
+      </div>
+
+      <div class="tab-content" id="tab-balance">
+        <h3>💰 Ваш Баланс</h3>
+        <p style="margin-top: 10px; font-size: 22px; color: #facc15;"><span id="modalBal">10</span> ⭐</p>
+      </div>
+
+      <div class="tab-content" id="tab-deposit">
+        <h3>⭐ Пополнение</h3>
+        <p style="margin-top: 8px; font-size: 14px; color: #94a3b8;">Пополнение через Telegram Stars:</p>
+        <button class="action-btn btn-exchange" style="margin-top: 15px;" onclick="changeBalance(50); closeModal();">Купить +50 ⭐</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gift-modal" id="giftModal">
+    <div class="gift-icon">🎁</div>
+    <h2 id="giftTitle">Вам выпал приз!</h2>
+    <p style="color: #cbd5e1; margin: 8px 0 15px;">Вы можете забрать его или обменять на баланс ⭐</p>
+    
+    <button class="action-btn btn-claim" onclick="claimGift()">🎁 Забрать подарок</button>
+    <button class="action-btn btn-exchange" onclick="exchangeGift()">⭐ Обменять на баланс</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.expand();
+      if (tg.initDataUnsafe?.user) {
+        document.getElementById('usernameText').innerText = `Игрок: ${tg.initDataUnsafe.user.first_name}`;
+      }
+    }
+
+    const SPIN_COST = 5;
+    let userBalance = parseInt(localStorage.getItem('starsBalance')) || 10;
+    let currentPrize = null;
+
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const arrowLayer = document.getElementById('arrowLayer');
+    const spinBtn = document.getElementById('spinBtn');
+    const resultText = document.getElementById('resultText');
+    const balanceVal = document.getElementById('balanceVal');
+    const modalBal = document.getElementById('modalBal');
+
+    function updateUI() {
+      balanceVal.innerText = userBalance;
+      modalBal.innerText = userBalance;
+      localStorage.setItem('starsBalance', userBalance);
+
+      if (userBalance < SPIN_COST && !isSpinning) {
+        spinBtn.disabled = true;
+        resultText.innerText = "Недостаточно ⭐ для вращения!";
+      } else if (!isSpinning) {
+        spinBtn.disabled = false;
+      }
+    }
+
+    function changeBalance(amount) {
+      userBalance = Math.max(0, userBalance + amount);
+      updateUI();
+    }
+
+    const sectors = [
+      { label: "100 STAR", value: 100, color: "#ec4899" },
+      { label: "EMPTY", value: 0, color: "#0b0f19" },
+      { label: "50 STAR", value: 50, color: "#8b5cf6" },
+      { label: "EMPTY", value: 0, color: "#090d16" },
+      { label: "25 STAR", value: 25, color: "#3b82f6" },
+      { label: "15 STAR", value: 15, color: "#06b6d4" }
+    ];
+
+    const numSectors = sectors.length;
+    const arc = (2 * Math.PI) / numSectors;
+    let currentArrowAngle = 0;
+    let isSpinning = false;
+
+    // Отрисовка колеса
     
