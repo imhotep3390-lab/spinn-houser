@@ -34,18 +34,16 @@
       padding-top: 65px;
       padding-bottom: 90px;
       overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+      position: relative;
     }
 
     /* HUD Верхняя панель */
     .hud-bar {
       position: fixed; top: 10px; left: 10px; right: 10px;
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 100; pointer-events: none;
+      z-index: 9999;
     }
-    .hud-left, .hud-right { display: flex; gap: 8px; pointer-events: auto; }
+    .hud-left, .hud-right { display: flex; gap: 8px; }
     
     .balance-card {
       background: var(--panel-bg); border: 1px solid var(--panel-border);
@@ -56,8 +54,7 @@
     .btn-add-stars {
       background: var(--accent-gradient); color: #fff; border: none; width: 24px; height: 24px;
       border-radius: 50%; font-weight: bold; font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
-      pointer-events: auto; z-index: 101;
+      display: flex; align-items: center; justify-content: center;
     }
     .btn-add-stars:active { transform: scale(0.85); }
     
@@ -65,23 +62,20 @@
       background: var(--panel-bg); border: 1px solid var(--panel-border);
       width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       cursor: pointer; font-size: 16px; backdrop-filter: blur(12px);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-      pointer-events: auto; z-index: 101;
     }
-    .icon-menu-btn:active { transform: scale(0.85); border-color: var(--accent-primary); }
+    .icon-menu-btn:active { transform: scale(0.85); }
 
     /* Нижняя панель навигации */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(13, 10, 34, 0.98); border-top: 1px solid var(--panel-border);
-      display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;
-      backdrop-filter: blur(15px); pointer-events: auto;
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 9999;
+      backdrop-filter: blur(15px);
     }
     .nav-item {
       background: transparent; border: none; color: var(--text-muted);
       font-size: 11px; font-weight: 600; display: flex; flex-direction: column;
-      align-items: center; gap: 2px; cursor: pointer; flex: 1; transition: color 0.2s;
-      pointer-events: auto;
+      align-items: center; gap: 2px; cursor: pointer; flex: 1;
     }
     .nav-item span.nav-icon { font-size: 18px; }
     .nav-item.active { color: #c084fc; }
@@ -89,14 +83,12 @@
     /* Контейнер */
     .app-container {
       width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; flex: 1;
-      position: relative; z-index: 10; pointer-events: none;
+      position: relative; z-index: 10;
     }
-    .app-container > * { pointer-events: auto; }
 
     .app-title {
       font-size: 22px; font-weight: 900; color: #c084fc; text-transform: uppercase;
       letter-spacing: 2px; margin-bottom: 2px; text-align: center;
-      text-shadow: 0 0 20px rgba(192, 132, 252, 0.5);
     }
     .app-subtitle {
       font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: center; letter-spacing: 1px;
@@ -107,7 +99,7 @@
     .tab-view.active { display: flex; }
 
     /* Колесо */
-    .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; pointer-events: none; }
+    .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; }
     .wheel-pointer {
       position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
       width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
@@ -125,13 +117,13 @@
         #64748b 308.57deg 360deg
       );
       border: 5px solid #c084fc; position: relative; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.4), inset 0 0 25px rgba(0,0,0,0.6);
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
       transition: transform 4.5s cubic-bezier(0.15, 0.85, 0.2, 1);
     }
     .wheel-center-hub {
       width: 65px; height: 65px; background: #0f172a; border: 3px solid #c084fc;
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 22px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); z-index: 5;
+      font-size: 22px; z-index: 5;
     }
 
     /* Кнопки */
@@ -139,16 +131,15 @@
       background: var(--accent-gradient); color: #fff; border: none; width: 100%; max-width: 280px;
       padding: 13px 0; font-size: 14px; font-weight: 800; border-radius: 22px; cursor: pointer;
       text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(168, 85, 247, 0.35);
-      transition: transform 0.2s ease, opacity 0.2s ease; margin-bottom: 8px; pointer-events: auto;
+      margin-bottom: 8px; position: relative; z-index: 20;
     }
     .btn-action:active { transform: scale(0.97); }
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-secondary { background: var(--panel-bg); border: 1px solid var(--panel-border); box-shadow: none; }
     .spin-status-text { font-size: 13px; color: var(--yellow); min-height: 22px; text-align: center; font-weight: 600; margin-top: 4px; }
 
     .section-card {
       width: 100%; background: var(--panel-bg); border: 1px solid var(--panel-border);
-      border-radius: 16px; padding: 12px; margin-bottom: 10px; backdrop-filter: blur(10px);
+      border-radius: 16px; padding: 12px; margin-bottom: 10px;
     }
     .section-title { font-size: 13px; color: #c084fc; margin-bottom: 8px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
 
@@ -159,14 +150,13 @@
     .inv-card {
       background: rgba(15, 23, 42, 0.7); border: 1px solid var(--panel-border); border-radius: 12px;
       padding: 10px 4px; display: flex; flex-direction: column; align-items: center; cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s; position: relative; pointer-events: auto;
+      position: relative; z-index: 20;
     }
     .inv-card:active { transform: scale(0.94); border-color: var(--accent-primary); }
     .inv-icon { font-size: 24px; margin-bottom: 3px; }
     .inv-name { font-size: 10px; font-weight: 600; color: #fff; text-align: center; }
     .inv-val { font-size: 10px; font-weight: bold; color: var(--yellow); margin-top: 3px; }
 
-    /* Прокачка и квесты */
     .upgrade-row, .quest-row {
       display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6);
       padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; font-size: 12px;
@@ -177,7 +167,7 @@
     .mg-select-btn {
       background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px;
       padding: 12px 6px; text-align: center; color: #fff; font-weight: 700; font-size: 12px; cursor: pointer;
-      transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: auto;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; z-index: 20;
     }
     .mg-select-btn.active { background: var(--accent-gradient); border-color: transparent; }
     .mg-container { display: none; width: 100%; flex-direction: column; align-items: center; }
@@ -188,45 +178,43 @@
       border-radius: 14px; position: relative; display: flex; align-items: center; justify-content: center;
       overflow: hidden; margin-bottom: 10px;
     }
-    .rocket-multiplier { font-size: 32px; font-weight: 900; color: var(--yellow); z-index: 2; text-shadow: 0 0 15px rgba(250,204,21,0.5); }
+    .rocket-multiplier { font-size: 32px; font-weight: 900; color: var(--yellow); z-index: 2; }
     .rocket-ship { position: absolute; bottom: 20px; left: 20px; font-size: 28px; transition: transform 0.1s linear; }
 
     .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; width: 240px; }
     .mine-cell {
       width: 52px; height: 52px; background: #1e1b4b; border: 1px solid var(--panel-border);
       border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
-      font-weight: bold; cursor: pointer; transition: background 0.2s; pointer-events: auto;
+      font-weight: bold; cursor: pointer; position: relative; z-index: 20;
     }
     .mine-cell.opened { background: #0f172a; border-color: var(--success); }
 
     /* Модалки */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 0, 20, 0.75);
-      backdrop-filter: blur(6px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      backdrop-filter: blur(6px); z-index: 30000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
     .modal-sheet {
       position: fixed; bottom: -100%; left: 0; right: 0; background: #0d0a22; border-top: 2px solid var(--accent-primary);
       border-radius: 28px 28px 0 0; padding: 22px 18px 30px 18px; transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
-      z-index: 201; text-align: center; box-shadow: 0 -15px 40px rgba(0,0,0,0.7); max-height: 85vh; display: flex; flex-direction: column;
-      pointer-events: auto;
+      z-index: 30001; text-align: center; box-shadow: 0 -15px 40px rgba(0,0,0,0.7); max-height: 85vh; display: flex; flex-direction: column;
     }
     .modal-sheet.show { bottom: 0; }
     .modal-title { font-size: 17px; color: #c084fc; margin-bottom: 10px; font-weight: 800; }
     .input-deposit {
       width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--panel-border);
       background: #0f172a; color: #fff; font-size: 18px; font-weight: bold; text-align: center; outline: none; margin: 8px 0 12px 0;
-      pointer-events: auto;
     }
     .quick-amounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
     .quick-num-btn {
       background: #1e1b4b; border: 1px solid var(--panel-border); padding: 8px 0; border-radius: 10px;
-      color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; pointer-events: auto;
+      color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; position: relative; z-index: 30002;
     }
     .quick-num-btn:active { background: var(--accent-primary); }
     .modal-close-btn {
       background: #334155; color: #fff; border: none; width: 100%; padding: 11px;
-      border-radius: 14px; font-weight: bold; cursor: pointer; margin-top: 4px; font-size: 13px; pointer-events: auto;
+      border-radius: 14px; font-weight: bold; cursor: pointer; margin-top: 4px; font-size: 13px; position: relative; z-index: 30002;
     }
   </style>
 </head>
@@ -372,6 +360,17 @@
   </div>
 
   <script>
+    /* Мобильный фикс касаний: привязка touchstart ко всем интерактивным элементам */
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('button, .nav-item, .inv-card, .mine-cell, .mg-select-btn, .icon-menu-btn, .btn-add-stars').forEach(el => {
+        el.addEventListener('touchstart', (e) => {
+          // Предотвращаем фантомные задержки клика на мобильных
+          const clickEvent = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+          el.dispatchEvent(clickEvent);
+        }, { passive: true });
+      });
+    });
+
     /* Аудиодвижок Web Audio API */
     class SoundEngine {
       constructor() { this.ctx = null; }
@@ -391,4 +390,10 @@
       playWin() {
         this.init(); if (!this.ctx) return;
         try {
-          const now 
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+            const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(f, now + i*0.07); gain.gain.setValueAtTime(0.08, now + i*0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.07 + 0.25);
+            osc.connect(gain); gain.connect(this.ctx.destination);
+            osc.start(now +
