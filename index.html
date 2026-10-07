@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Galaxy Empire Ultimate Pro</title>
+  <title>Galaxy Empire: Ultimate Edition</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg-color: #030014;
-      --panel-bg: rgba(20, 17, 45, 0.88);
+      --panel-bg: rgba(20, 17, 45, 0.9);
       --panel-border: rgba(168, 85, 247, 0.4);
       --accent-primary: #a855f7;
       --accent-secondary: #6366f1;
@@ -33,15 +33,15 @@
       align-items: center;
       padding: 12px;
       padding-top: 65px;
-      padding-bottom: 80px;
+      padding-bottom: 85px;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 60%);
+        radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 60%);
     }
 
-    /* Верхняя панель HUD */
+    /* HUD Верхняя панель */
     .hud-bar {
       position: fixed; top: 10px; left: 10px; right: 10px;
       display: flex; justify-content: space-between; align-items: center;
@@ -85,7 +85,7 @@
     .nav-item span.nav-icon { font-size: 18px; }
     .nav-item.active { color: #c084fc; }
 
-    /* Основной контейнер */
+    /* Контейнер */
     .app-container {
       width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; flex: 1;
     }
@@ -98,12 +98,12 @@
       font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: center; letter-spacing: 1px;
     }
 
-    /* Табы (вкладки приложения) */
+    /* Вкладки */
     .tab-view { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease forwards; }
     .tab-view.active { display: flex; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Колесо фортуны */
+    /* Колесо */
     .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; }
     .wheel-pointer {
       position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
@@ -131,7 +131,7 @@
       font-size: 22px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); z-index: 5;
     }
 
-    /* Кнопки и панели */
+    /* Кнопки */
     .btn-action {
       background: var(--accent-gradient); color: #fff; border: none; width: 100%; max-width: 280px;
       padding: 13px 0; font-size: 14px; font-weight: 800; border-radius: 22px; cursor: pointer;
@@ -163,13 +163,13 @@
     .inv-name { font-size: 10px; font-weight: 600; color: #fff; text-align: center; }
     .inv-val { font-size: 10px; font-weight: bold; color: var(--yellow); margin-top: 3px; }
 
-    /* Прокачка и Квесты */
+    /* Прокачка и квесты */
     .upgrade-row, .quest-row {
       display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6);
       padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; font-size: 12px;
     }
 
-    /* Мини-игры меню */
+    /* Мини-игры */
     .minigames-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-bottom: 12px; }
     .mg-select-btn {
       background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px;
@@ -180,7 +180,6 @@
     .mg-container { display: none; width: 100%; flex-direction: column; align-items: center; }
     .mg-container.active { display: flex; }
 
-    /* Ракета */
     .rocket-screen {
       width: 100%; height: 180px; background: #08051e; border: 1px solid var(--panel-border);
       border-radius: 14px; position: relative; display: flex; align-items: center; justify-content: center;
@@ -189,7 +188,6 @@
     .rocket-multiplier { font-size: 32px; font-weight: 900; color: var(--yellow); z-index: 2; text-shadow: 0 0 15px rgba(250,204,21,0.5); }
     .rocket-ship { position: absolute; bottom: 20px; left: 20px; font-size: 28px; transition: transform 0.1s linear; }
 
-    /* Сапёр */
     .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; width: 240px; }
     .mine-cell {
       width: 52px; height: 52px; background: #1e1b4b; border: 1px solid var(--panel-border);
@@ -198,7 +196,7 @@
     }
     .mine-cell.opened { background: #0f172a; border-color: var(--success); }
 
-    /* Модальные окна */
+    /* Модалки */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 0, 20, 0.75);
       backdrop-filter: blur(6px); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
@@ -234,19 +232,18 @@
     <div class="hud-left">
       <div class="balance-card">
         <span id="userBalance">150</span> ⭐
-        <button class="btn-add-stars" onclick="openModal('depositModal')">+</button>
+        <button class="btn-add-stars" id="openDepositBtn">+</button>
       </div>
     </div>
     <div class="hud-right">
-      <div class="icon-menu-btn" onclick="openModal('dailyModal')" title="Бонус">🎁</div>
-      <div class="icon-menu-btn" onclick="openModal('historyModal')" title="История">📜</div>
+      <div class="icon-menu-btn" id="openDailyBtn" title="Бонус">🎁</div>
+      <div class="icon-menu-btn" id="openHistoryBtn" title="История">📜</div>
     </div>
   </div>
 
-  <!-- Главный контейнер -->
   <div class="app-container">
     <div class="app-title">Galaxy Empire</div>
-    <div class="app-subtitle">Ultimate Cyberpunk Ecosystem</div>
+    <div class="app-subtitle">Ultimate Cyberpunk Edition</div>
 
     <!-- Вкладка 1: Колесо Фортуны -->
     <div id="tabSpin" class="tab-view active">
@@ -256,7 +253,7 @@
           <div class="wheel-center-hub">✨</div>
         </div>
       </div>
-      <button class="btn-action" id="spinBtn" onclick="executeSpin()">Крутить колесо (5 ⭐)</button>
+      <button class="btn-action" id="spinBtn">Крутить колесо (5 ⭐)</button>
       <div class="spin-status-text" id="spinStatusText">Испытай удачу в глубоком космосе!</div>
     </div>
 
@@ -264,48 +261,48 @@
     <div id="tabInv" class="tab-view">
       <div class="section-card" style="width:100%;">
         <div class="section-title"><span>Коллекция подарков</span><span id="invCountText" style="color:var(--text-muted)">0 шт.</span></div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Кликните по предмету для быстрой продажи за звезды:</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Кликните по предмету для продажи за звезды:</div>
         <div class="inventory-grid" id="inventoryGridContainer"></div>
       </div>
     </div>
 
-    <!-- Вкладка 3: Аркады и Мини-игры -->
+    <!-- Вкладка 3: Аркады -->
     <div id="tabGames" class="tab-view">
       <div class="minigames-menu">
-        <div class="mg-select-btn active" id="menuBtnRocket" onclick="switchMiniGame('rocket')"><span>🚀</span>Ракета</div>
-        <div class="mg-select-btn" id="menuBtnUpgr" onclick="switchMiniGame('upgrade')"><span>⚡</span>Апгрейд</div>
-        <div class="mg-select-btn" id="menuBtnMines" onclick="switchMiniGame('mines')"><span>💣</span>Сапёр</div>
+        <div class="mg-select-btn active" id="menuBtnRocket"><span>🚀</span>Ракета</div>
+        <div class="mg-select-btn" id="menuBtnUpgr"><span>⚡</span>Апгрейд</div>
+        <div class="mg-select-btn" id="menuBtnMines"><span>💣</span>Сапёр</div>
       </div>
 
-      <!-- Игра 1: Ракета (Crash) -->
+      <!-- Ракета -->
       <div id="mgRocket" class="mg-container active">
         <div class="rocket-screen">
           <div class="rocket-ship" id="rocketShip">🚀</div>
           <div class="rocket-multiplier" id="rocketMultiplier">1.00x</div>
         </div>
         <input type="number" id="rocketBet" class="input-deposit" value="10" min="1" style="margin-bottom:8px; font-size:16px; padding:10px;">
-        <button class="btn-action" id="rocketActionBtn" onclick="startRocketGame()">Запустить ракету</button>
+        <button class="btn-action" id="rocketActionBtn">Запустить ракету</button>
       </div>
 
-      <!-- Игра 2: Апгрейд шанса -->
+      <!-- Апгрейд шанса -->
       <div id="mgUpgrade" class="mg-container">
         <div class="section-card" style="text-align:center; padding:20px;">
           <div style="font-size: 14px; font-weight:bold; color:#c084fc; margin-bottom:8px;">Множитель x3.0 (Шанс: 30%)</div>
-          <div style="font-size: 12px; color:var(--text-muted); margin-bottom:15px;">Умножьте ставку в 3 раза при успешном прохождении!</div>
+          <div style="font-size: 12px; color:var(--text-muted); margin-bottom:15px;">Умножьте ставку в 3 раза при успехе!</div>
           <input type="number" id="upgrBet" class="input-deposit" value="10" min="1" style="margin-bottom:12px; font-size:16px; padding:10px;">
-          <button class="btn-action" onclick="playChanceUpgrade()">Рискнуть</button>
+          <button class="btn-action" id="upgrRiskBtn">Рискнуть</button>
         </div>
       </div>
 
-      <!-- Игра 3: Звездный Сапёр -->
+      <!-- Сапёр -->
       <div id="mgMines" class="mg-container">
         <div style="font-size: 12px; color: var(--yellow); margin-bottom: 8px; font-weight:700;" id="minesStatus">Открывайте безопасные ячейки!</div>
         <div class="mines-grid" id="minesGridContainer"></div>
-        <button class="btn-action btn-secondary" onclick="initMinesGame()" style="padding:10px; font-size:13px;">Сбросить поле</button>
+        <button class="btn-action btn-secondary" id="resetMinesBtn" style="padding:10px; font-size:13px;">Сбросить поле</button>
       </div>
     </div>
 
-    <!-- Вкладка 4: Прокачка (Upgrades) -->
+    <!-- Вкладка 4: Прокачка -->
     <div id="tabUpgrades" class="tab-view">
       <div class="section-card" style="width:100%;">
         <div class="section-title"><span>Прокачка аккаунта</span></div>
@@ -322,24 +319,24 @@
     </div>
   </div>
 
-  <!-- Нижнее меню навигации -->
+  <!-- Нижняя навигация -->
   <div class="bottom-nav">
-    <button class="nav-item active" onclick="switchMainTab('tabSpin', this)"><span class="nav-icon">🎡</span>Колесо</button>
-    <button class="nav-item" onclick="switchMainTab('tabInv', this)"><span class="nav-icon">🎒</span>Инвентарь</button>
-    <button class="nav-item" onclick="switchMainTab('tabGames', this)"><span class="nav-icon">🕹️</span>Аркады</button>
-    <button class="nav-item" onclick="switchMainTab('tabUpgrades', this)"><span class="nav-icon">⭐</span>Апгрейд</button>
-    <button class="nav-item" onclick="switchMainTab('tabQuests', this)"><span class="nav-icon">🏆</span>Квесты</button>
+    <button class="nav-item active" data-tab="tabSpin"><span class="nav-icon">🎡</span>Колесо</button>
+    <button class="nav-item" data-tab="tabInv"><span class="nav-icon">🎒</span>Инвентарь</button>
+    <button class="nav-item" data-tab="tabGames"><span class="nav-icon">🕹️</span>Аркады</button>
+    <button class="nav-item" data-tab="tabUpgrades"><span class="nav-icon">⭐</span>Апгрейд</button>
+    <button class="nav-item" data-tab="tabQuests"><span class="nav-icon">🏆</span>Квесты</button>
   </div>
 
-  <!-- Модальные окна -->
-  <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+  <!-- Модалки -->
+  <div class="modal-overlay" id="modalOverlay"></div>
 
   <div class="modal-sheet" id="winModal">
     <div id="winModalIcon" style="font-size: 45px; margin-bottom: 4px;">🎁</div>
     <div class="modal-title" id="winModalTitle">Приз получен!</div>
     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Отправить в инвентарь или продать?</p>
-    <button class="btn-action" style="width:100%; margin-bottom: 8px;" onclick="claimPrizeToInventory()">🎒 В инвентарь</button>
-    <button class="btn-action btn-secondary" style="width:100%; margin:0;" id="winModalSellBtn" onclick="sellPrizeImmediately()">⭐ Продать</button>
+    <button class="btn-action" id="claimInvBtn" style="width:100%; margin-bottom: 8px;">🎒 В инвентарь</button>
+    <button class="btn-action btn-secondary" id="sellImmBtn" style="width:100%; margin:0;">⭐ Продать</button>
   </div>
 
   <div class="modal-sheet" id="depositModal">
@@ -347,30 +344,30 @@
     <p style="color: var(--text-muted); font-size: 12px; text-align: left; margin-bottom: 4px;">Сумма в Telegram Stars:</p>
     <input type="number" id="depositInput" class="input-deposit" value="50" min="1">
     <div class="quick-amounts-grid">
-      <button class="quick-num-btn" onclick="setDepositVal(10)">10</button>
-      <button class="quick-num-btn" onclick="setDepositVal(50)">50</button>
-      <button class="quick-num-btn" onclick="setDepositVal(100)">100</button>
-      <button class="quick-num-btn" onclick="setDepositVal(500)">500</button>
+      <button class="quick-num-btn" data-val="10">10</button>
+      <button class="quick-num-btn" data-val="50">50</button>
+      <button class="quick-num-btn" data-val="100">100</button>
+      <button class="quick-num-btn" data-val="500">500</button>
     </div>
-    <button class="btn-action" style="width:100%; margin-bottom: 6px;" onclick="proceedToPayment()">Оплатить через Telegram</button>
-    <button class="modal-close-btn" onclick="closeAllModals()">Отмена</button>
+    <button class="btn-action" id="proceedPayBtn" style="width:100%; margin-bottom: 6px;">Оплатить через Telegram</button>
+    <button class="modal-close-btn" id="closeDepBtn">Отмена</button>
   </div>
 
   <div class="modal-sheet" id="dailyModal">
     <div class="modal-title">Ежедневный бонус 🎁</div>
     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Заходите каждый день и получайте бесплатные звезды!</p>
-    <button class="btn-action" style="width:100%; margin-bottom: 6px;" id="claimDailyBtn" onclick="claimDailyBonus()">Забрать 20 ⭐</button>
-    <button class="modal-close-btn" onclick="closeAllModals()">Закрыть</button>
+    <button class="btn-action" id="claimDailyBtn" style="width:100%; margin-bottom: 6px;">Забрать 20 ⭐</button>
+    <button class="modal-close-btn" id="closeDailyBtn">Закрыть</button>
   </div>
 
   <div class="modal-sheet" id="historyModal">
     <div class="modal-title">История транзакций 📜</div>
     <div id="historyListContainer" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;"></div>
-    <button class="modal-close-btn" onclick="closeAllModals()">Закрыть</button>
+    <button class="modal-close-btn" id="closeHistBtn">Закрыть</button>
   </div>
 
   <script>
-    /* Аудиодвижок на Web Audio API */
+    /* Аудиодвижок Web Audio API */
     class SoundEngine {
       constructor() { this.ctx = null; }
       init() { if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.ctx = new AC(); } }
@@ -384,4 +381,22 @@
           gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
           osc.connect(gain); gain.connect(this.ctx.destination);
           osc.start(); osc.stop(this.ctx.currentTime + 0.03);
-        } cat
+        } catch(e){}
+      }
+      playWin() {
+        this.init(); if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+            const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(f, now + i*0.07); gain.gain.setValueAtTime(0.08, now + i*0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.07 + 0.25);
+            osc.connect(gain); gain.connect(this.ctx.destination);
+            osc.start(now + i*0.07); osc.stop(now + i*0.07 + 0.25);
+          });
+        } catch(e){}
+      }
+      playExplosion() {
+        this.init(); if (!this.ctx) return;
+        try {
+          const size = 
