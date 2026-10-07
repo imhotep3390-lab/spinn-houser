@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Galaxy Empire Pro</title>
+  <title>Galaxy Empire Ultimate Pro</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg-color: #030014;
-      --panel-bg: rgba(20, 17, 45, 0.85);
-      --panel-border: rgba(168, 85, 247, 0.35);
+      --panel-bg: rgba(20, 17, 45, 0.88);
+      --panel-border: rgba(168, 85, 247, 0.4);
       --accent-primary: #a855f7;
       --accent-secondary: #6366f1;
       --accent-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
@@ -33,7 +33,7 @@
       align-items: center;
       padding: 12px;
       padding-top: 65px;
-      padding-bottom: 75px;
+      padding-bottom: 80px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
@@ -41,7 +41,7 @@
         radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 60%);
     }
 
-    /* HUD Bar */
+    /* Верхняя панель HUD */
     .hud-bar {
       position: fixed; top: 10px; left: 10px; right: 10px;
       display: flex; justify-content: space-between; align-items: center;
@@ -70,7 +70,7 @@
     }
     .icon-menu-btn:active { transform: scale(0.85); border-color: var(--accent-primary); }
 
-    /* Bottom Navigation Bar */
+    /* Нижняя панель навигации */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(13, 10, 34, 0.95); border-top: 1px solid var(--panel-border);
@@ -85,7 +85,7 @@
     .nav-item span.nav-icon { font-size: 18px; }
     .nav-item.active { color: #c084fc; }
 
-    /* App Container */
+    /* Основной контейнер */
     .app-container {
       width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; flex: 1;
     }
@@ -98,12 +98,12 @@
       font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: center; letter-spacing: 1px;
     }
 
-    /* Tab Contents */
+    /* Табы (вкладки приложения) */
     .tab-view { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease forwards; }
     .tab-view.active { display: flex; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Wheel Section */
+    /* Колесо фортуны */
     .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; }
     .wheel-pointer {
       position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
@@ -131,7 +131,7 @@
       font-size: 22px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); z-index: 5;
     }
 
-    /* Common Buttons */
+    /* Кнопки и панели */
     .btn-action {
       background: var(--accent-gradient); color: #fff; border: none; width: 100%; max-width: 280px;
       padding: 13px 0; font-size: 14px; font-weight: 800; border-radius: 22px; cursor: pointer;
@@ -143,14 +143,13 @@
     .btn-secondary { background: var(--panel-bg); border: 1px solid var(--panel-border); box-shadow: none; }
     .spin-status-text { font-size: 13px; color: var(--yellow); min-height: 22px; text-align: center; font-weight: 600; margin-top: 4px; }
 
-    /* Sections / Panels */
     .section-card {
       width: 100%; background: var(--panel-bg); border: 1px solid var(--panel-border);
       border-radius: 16px; padding: 12px; margin-bottom: 10px; backdrop-filter: blur(10px);
     }
     .section-title { font-size: 13px; color: #c084fc; margin-bottom: 8px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Inventory */
+    /* Инвентарь */
     .inventory-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 320px; overflow-y: auto; padding: 2px; width: 100%;
     }
@@ -164,13 +163,13 @@
     .inv-name { font-size: 10px; font-weight: 600; color: #fff; text-align: center; }
     .inv-val { font-size: 10px; font-weight: bold; color: var(--yellow); margin-top: 3px; }
 
-    /* Upgrades & Quests */
+    /* Прокачка и Квесты */
     .upgrade-row, .quest-row {
       display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6);
       padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; font-size: 12px;
     }
 
-    /* Mini Games Styles */
+    /* Мини-игры меню */
     .minigames-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-bottom: 12px; }
     .mg-select-btn {
       background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px;
@@ -181,7 +180,7 @@
     .mg-container { display: none; width: 100%; flex-direction: column; align-items: center; }
     .mg-container.active { display: flex; }
 
-    /* Rocket Game */
+    /* Ракета */
     .rocket-screen {
       width: 100%; height: 180px; background: #08051e; border: 1px solid var(--panel-border);
       border-radius: 14px; position: relative; display: flex; align-items: center; justify-content: center;
@@ -190,7 +189,7 @@
     .rocket-multiplier { font-size: 32px; font-weight: 900; color: var(--yellow); z-index: 2; text-shadow: 0 0 15px rgba(250,204,21,0.5); }
     .rocket-ship { position: absolute; bottom: 20px; left: 20px; font-size: 28px; transition: transform 0.1s linear; }
 
-    /* Minesweeper Game */
+    /* Сапёр */
     .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; width: 240px; }
     .mine-cell {
       width: 52px; height: 52px; background: #1e1b4b; border: 1px solid var(--panel-border);
@@ -199,7 +198,7 @@
     }
     .mine-cell.opened { background: #0f172a; border-color: var(--success); }
 
-    /* Modals */
+    /* Модальные окна */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 0, 20, 0.75);
       backdrop-filter: blur(6px); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
@@ -230,11 +229,11 @@
 </head>
 <body>
 
-  <!-- HUD Верхняя панель -->
+  <!-- Верхняя панель HUD -->
   <div class="hud-bar">
     <div class="hud-left">
       <div class="balance-card">
-        <span id="userBalance">100</span> ⭐
+        <span id="userBalance">150</span> ⭐
         <button class="btn-add-stars" onclick="openModal('depositModal')">+</button>
       </div>
     </div>
@@ -244,9 +243,10 @@
     </div>
   </div>
 
+  <!-- Главный контейнер -->
   <div class="app-container">
     <div class="app-title">Galaxy Empire</div>
-    <div class="app-subtitle">Космическая экосистема призов и мини-игр</div>
+    <div class="app-subtitle">Ultimate Cyberpunk Ecosystem</div>
 
     <!-- Вкладка 1: Колесо Фортуны -->
     <div id="tabSpin" class="tab-view active">
@@ -269,7 +269,7 @@
       </div>
     </div>
 
-    <!-- Вкладка 3: Мини-игры -->
+    <!-- Вкладка 3: Аркады и Мини-игры -->
     <div id="tabGames" class="tab-view">
       <div class="minigames-menu">
         <div class="mg-select-btn active" id="menuBtnRocket" onclick="switchMiniGame('rocket')"><span>🚀</span>Ракета</div>
@@ -287,7 +287,7 @@
         <button class="btn-action" id="rocketActionBtn" onclick="startRocketGame()">Запустить ракету</button>
       </div>
 
-      <!-- Игра 2: Апгрейд множителя шанса -->
+      <!-- Игра 2: Апгрейд шанса -->
       <div id="mgUpgrade" class="mg-container">
         <div class="section-card" style="text-align:center; padding:20px;">
           <div style="font-size: 14px; font-weight:bold; color:#c084fc; margin-bottom:8px;">Множитель x3.0 (Шанс: 30%)</div>
@@ -322,7 +322,7 @@
     </div>
   </div>
 
-  <!-- Нижняя панель навигации -->
+  <!-- Нижнее меню навигации -->
   <div class="bottom-nav">
     <button class="nav-item active" onclick="switchMainTab('tabSpin', this)"><span class="nav-icon">🎡</span>Колесо</button>
     <button class="nav-item" onclick="switchMainTab('tabInv', this)"><span class="nav-icon">🎒</span>Инвентарь</button>
@@ -334,16 +334,14 @@
   <!-- Модальные окна -->
   <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
 
-  <!-- Выигрыш колеса -->
   <div class="modal-sheet" id="winModal">
     <div id="winModalIcon" style="font-size: 45px; margin-bottom: 4px;">🎁</div>
     <div class="modal-title" id="winModalTitle">Приз получен!</div>
-    <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;" id="winModalDesc">Отправить в инвентарь или продать?</p>
+    <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Отправить в инвентарь или продать?</p>
     <button class="btn-action" style="width:100%; margin-bottom: 8px;" onclick="claimPrizeToInventory()">🎒 В инвентарь</button>
     <button class="btn-action btn-secondary" style="width:100%; margin:0;" id="winModalSellBtn" onclick="sellPrizeImmediately()">⭐ Продать</button>
   </div>
 
-  <!-- Пополнение поинтов -->
   <div class="modal-sheet" id="depositModal">
     <div class="modal-title">Пополнение баланса ⭐</div>
     <p style="color: var(--text-muted); font-size: 12px; text-align: left; margin-bottom: 4px;">Сумма в Telegram Stars:</p>
@@ -358,15 +356,13 @@
     <button class="modal-close-btn" onclick="closeAllModals()">Отмена</button>
   </div>
 
-  <!-- Ежедневный бонус -->
   <div class="modal-sheet" id="dailyModal">
     <div class="modal-title">Ежедневный бонус 🎁</div>
     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Заходите каждый день и получайте бесплатные звезды!</p>
-    <button class="btn-action" style="width:100%; margin-bottom: 6px;" id="claimDailyBtn" onclick="claimDailyBonus()">Забрать 15 ⭐</button>
+    <button class="btn-action" style="width:100%; margin-bottom: 6px;" id="claimDailyBtn" onclick="claimDailyBonus()">Забрать 20 ⭐</button>
     <button class="modal-close-btn" onclick="closeAllModals()">Закрыть</button>
   </div>
 
-  <!-- История транзакций -->
   <div class="modal-sheet" id="historyModal">
     <div class="modal-title">История транзакций 📜</div>
     <div id="historyListContainer" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;"></div>
@@ -374,9 +370,7 @@
   </div>
 
   <script>
-    /* ==========================================================
-       SOUND ENGINE (Web Audio API)
-       ================================================---------- */
+    /* Аудиодвижок на Web Audio API */
     class SoundEngine {
       constructor() { this.ctx = null; }
       init() { if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.ctx = new AC(); } }
@@ -386,4 +380,8 @@
           const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
           osc.type = 'triangle'; osc.frequency.setValueAtTime(500, this.ctx.currentTime);
           osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.03);
-          gain.gain.setValueAtTime(0.06, t
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.03);
+        } cat
