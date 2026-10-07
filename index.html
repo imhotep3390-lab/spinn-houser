@@ -8,12 +8,11 @@
   <style>
     :root {
       --bg-color: #030014;
-      --panel-bg: rgba(20, 17, 45, 0.9);
+      --panel-bg: rgba(20, 17, 45, 0.95);
       --panel-border: rgba(168, 85, 247, 0.4);
       --accent-primary: #a855f7;
       --accent-secondary: #6366f1;
       --accent-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
-      --pink-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
       --text-main: #ffffff;
       --text-muted: #94a3b8;
       --yellow: #facc15;
@@ -33,19 +32,18 @@
       align-items: center;
       padding: 12px;
       padding-top: 65px;
-      padding-bottom: 85px;
+      padding-bottom: 90px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 60%);
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
     }
 
     /* HUD Верхняя панель */
     .hud-bar {
       position: fixed; top: 10px; left: 10px; right: 10px;
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 50; pointer-events: none;
+      z-index: 100; pointer-events: none;
     }
     .hud-left, .hud-right { display: flex; gap: 8px; pointer-events: auto; }
     
@@ -59,6 +57,7 @@
       background: var(--accent-gradient); color: #fff; border: none; width: 24px; height: 24px;
       border-radius: 50%; font-weight: bold; font-size: 14px; cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
+      pointer-events: auto; z-index: 101;
     }
     .btn-add-stars:active { transform: scale(0.85); }
     
@@ -67,20 +66,22 @@
       width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       cursor: pointer; font-size: 16px; backdrop-filter: blur(12px);
       transition: transform 0.2s ease, border-color 0.2s ease;
+      pointer-events: auto; z-index: 101;
     }
     .icon-menu-btn:active { transform: scale(0.85); border-color: var(--accent-primary); }
 
     /* Нижняя панель навигации */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(13, 10, 34, 0.95); border-top: 1px solid var(--panel-border);
-      display: flex; justify-content: space-around; padding: 8px 0; z-index: 50;
-      backdrop-filter: blur(15px);
+      background: rgba(13, 10, 34, 0.98); border-top: 1px solid var(--panel-border);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;
+      backdrop-filter: blur(15px); pointer-events: auto;
     }
     .nav-item {
       background: transparent; border: none; color: var(--text-muted);
       font-size: 11px; font-weight: 600; display: flex; flex-direction: column;
       align-items: center; gap: 2px; cursor: pointer; flex: 1; transition: color 0.2s;
+      pointer-events: auto;
     }
     .nav-item span.nav-icon { font-size: 18px; }
     .nav-item.active { color: #c084fc; }
@@ -88,7 +89,10 @@
     /* Контейнер */
     .app-container {
       width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; flex: 1;
+      position: relative; z-index: 10; pointer-events: none;
     }
+    .app-container > * { pointer-events: auto; }
+
     .app-title {
       font-size: 22px; font-weight: 900; color: #c084fc; text-transform: uppercase;
       letter-spacing: 2px; margin-bottom: 2px; text-align: center;
@@ -99,12 +103,11 @@
     }
 
     /* Вкладки */
-    .tab-view { display: none; width: 100%; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease forwards; }
+    .tab-view { display: none; width: 100%; flex-direction: column; align-items: center; }
     .tab-view.active { display: flex; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Колесо */
-    .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; }
+    .wheel-outer-wrap { position: relative; width: 280px; height: 280px; margin: 10px 0 15px 0; pointer-events: none; }
     .wheel-pointer {
       position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
       width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
@@ -136,7 +139,7 @@
       background: var(--accent-gradient); color: #fff; border: none; width: 100%; max-width: 280px;
       padding: 13px 0; font-size: 14px; font-weight: 800; border-radius: 22px; cursor: pointer;
       text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(168, 85, 247, 0.35);
-      transition: transform 0.2s ease, opacity 0.2s ease; margin-bottom: 8px;
+      transition: transform 0.2s ease, opacity 0.2s ease; margin-bottom: 8px; pointer-events: auto;
     }
     .btn-action:active { transform: scale(0.97); }
     .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -156,7 +159,7 @@
     .inv-card {
       background: rgba(15, 23, 42, 0.7); border: 1px solid var(--panel-border); border-radius: 12px;
       padding: 10px 4px; display: flex; flex-direction: column; align-items: center; cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s; position: relative;
+      transition: transform 0.2s, border-color 0.2s; position: relative; pointer-events: auto;
     }
     .inv-card:active { transform: scale(0.94); border-color: var(--accent-primary); }
     .inv-icon { font-size: 24px; margin-bottom: 3px; }
@@ -174,7 +177,7 @@
     .mg-select-btn {
       background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 14px;
       padding: 12px 6px; text-align: center; color: #fff; font-weight: 700; font-size: 12px; cursor: pointer;
-      transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: auto;
     }
     .mg-select-btn.active { background: var(--accent-gradient); border-color: transparent; }
     .mg-container { display: none; width: 100%; flex-direction: column; align-items: center; }
@@ -192,52 +195,54 @@
     .mine-cell {
       width: 52px; height: 52px; background: #1e1b4b; border: 1px solid var(--panel-border);
       border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
-      font-weight: bold; cursor: pointer; transition: background 0.2s;
+      font-weight: bold; cursor: pointer; transition: background 0.2s; pointer-events: auto;
     }
     .mine-cell.opened { background: #0f172a; border-color: var(--success); }
 
     /* Модалки */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 0, 20, 0.75);
-      backdrop-filter: blur(6px); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      backdrop-filter: blur(6px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
     .modal-sheet {
       position: fixed; bottom: -100%; left: 0; right: 0; background: #0d0a22; border-top: 2px solid var(--accent-primary);
       border-radius: 28px 28px 0 0; padding: 22px 18px 30px 18px; transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
-      z-index: 101; text-align: center; box-shadow: 0 -15px 40px rgba(0,0,0,0.7); max-height: 85vh; display: flex; flex-direction: column;
+      z-index: 201; text-align: center; box-shadow: 0 -15px 40px rgba(0,0,0,0.7); max-height: 85vh; display: flex; flex-direction: column;
+      pointer-events: auto;
     }
     .modal-sheet.show { bottom: 0; }
     .modal-title { font-size: 17px; color: #c084fc; margin-bottom: 10px; font-weight: 800; }
     .input-deposit {
       width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--panel-border);
       background: #0f172a; color: #fff; font-size: 18px; font-weight: bold; text-align: center; outline: none; margin: 8px 0 12px 0;
+      pointer-events: auto;
     }
     .quick-amounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
     .quick-num-btn {
       background: #1e1b4b; border: 1px solid var(--panel-border); padding: 8px 0; border-radius: 10px;
-      color: #fff; font-weight: bold; font-size: 12px; cursor: pointer;
+      color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; pointer-events: auto;
     }
     .quick-num-btn:active { background: var(--accent-primary); }
     .modal-close-btn {
       background: #334155; color: #fff; border: none; width: 100%; padding: 11px;
-      border-radius: 14px; font-weight: bold; cursor: pointer; margin-top: 4px; font-size: 13px;
+      border-radius: 14px; font-weight: bold; cursor: pointer; margin-top: 4px; font-size: 13px; pointer-events: auto;
     }
   </style>
 </head>
 <body>
 
-  <!-- Верхняя панель HUD -->
+  <!-- HUD Верхняя панель -->
   <div class="hud-bar">
     <div class="hud-left">
       <div class="balance-card">
         <span id="userBalance">150</span> ⭐
-        <button class="btn-add-stars" id="openDepositBtn">+</button>
+        <button class="btn-add-stars" onclick="openModal('depositModal')">+</button>
       </div>
     </div>
     <div class="hud-right">
-      <div class="icon-menu-btn" id="openDailyBtn" title="Бонус">🎁</div>
-      <div class="icon-menu-btn" id="openHistoryBtn" title="История">📜</div>
+      <div class="icon-menu-btn" onclick="openModal('dailyModal')" title="Бонус">🎁</div>
+      <div class="icon-menu-btn" onclick="openModal('historyModal')" title="История">📜</div>
     </div>
   </div>
 
@@ -253,7 +258,7 @@
           <div class="wheel-center-hub">✨</div>
         </div>
       </div>
-      <button class="btn-action" id="spinBtn">Крутить колесо (5 ⭐)</button>
+      <button class="btn-action" onclick="executeSpin()">Крутить колесо (5 ⭐)</button>
       <div class="spin-status-text" id="spinStatusText">Испытай удачу в глубоком космосе!</div>
     </div>
 
@@ -269,9 +274,9 @@
     <!-- Вкладка 3: Аркады -->
     <div id="tabGames" class="tab-view">
       <div class="minigames-menu">
-        <div class="mg-select-btn active" id="menuBtnRocket"><span>🚀</span>Ракета</div>
-        <div class="mg-select-btn" id="menuBtnUpgr"><span>⚡</span>Апгрейд</div>
-        <div class="mg-select-btn" id="menuBtnMines"><span>💣</span>Сапёр</div>
+        <div class="mg-select-btn active" id="menuBtnRocket" onclick="switchMiniGame('rocket')"><span>🚀</span>Ракета</div>
+        <div class="mg-select-btn" id="menuBtnUpgr" onclick="switchMiniGame('upgrade')"><span>⚡</span>Апгрейд</div>
+        <div class="mg-select-btn" id="menuBtnMines" onclick="switchMiniGame('mines')"><span>💣</span>Сапёр</div>
       </div>
 
       <!-- Ракета -->
@@ -281,7 +286,7 @@
           <div class="rocket-multiplier" id="rocketMultiplier">1.00x</div>
         </div>
         <input type="number" id="rocketBet" class="input-deposit" value="10" min="1" style="margin-bottom:8px; font-size:16px; padding:10px;">
-        <button class="btn-action" id="rocketActionBtn">Запустить ракету</button>
+        <button class="btn-action" id="rocketActionBtn" onclick="startRocketGame()">Запустить ракету</button>
       </div>
 
       <!-- Апгрейд шанса -->
@@ -290,7 +295,7 @@
           <div style="font-size: 14px; font-weight:bold; color:#c084fc; margin-bottom:8px;">Множитель x3.0 (Шанс: 30%)</div>
           <div style="font-size: 12px; color:var(--text-muted); margin-bottom:15px;">Умножьте ставку в 3 раза при успехе!</div>
           <input type="number" id="upgrBet" class="input-deposit" value="10" min="1" style="margin-bottom:12px; font-size:16px; padding:10px;">
-          <button class="btn-action" id="upgrRiskBtn">Рискнуть</button>
+          <button class="btn-action" onclick="playChanceUpgrade()">Рискнуть</button>
         </div>
       </div>
 
@@ -298,7 +303,7 @@
       <div id="mgMines" class="mg-container">
         <div style="font-size: 12px; color: var(--yellow); margin-bottom: 8px; font-weight:700;" id="minesStatus">Открывайте безопасные ячейки!</div>
         <div class="mines-grid" id="minesGridContainer"></div>
-        <button class="btn-action btn-secondary" id="resetMinesBtn" style="padding:10px; font-size:13px;">Сбросить поле</button>
+        <button class="btn-action btn-secondary" onclick="initMinesGame()" style="padding:10px; font-size:13px;">Сбросить поле</button>
       </div>
     </div>
 
@@ -321,22 +326,22 @@
 
   <!-- Нижняя навигация -->
   <div class="bottom-nav">
-    <button class="nav-item active" data-tab="tabSpin"><span class="nav-icon">🎡</span>Колесо</button>
-    <button class="nav-item" data-tab="tabInv"><span class="nav-icon">🎒</span>Инвентарь</button>
-    <button class="nav-item" data-tab="tabGames"><span class="nav-icon">🕹️</span>Аркады</button>
-    <button class="nav-item" data-tab="tabUpgrades"><span class="nav-icon">⭐</span>Апгрейд</button>
-    <button class="nav-item" data-tab="tabQuests"><span class="nav-icon">🏆</span>Квесты</button>
+    <button class="nav-item active" onclick="switchMainTab('tabSpin', this)"><span class="nav-icon">🎡</span>Колесо</button>
+    <button class="nav-item" onclick="switchMainTab('tabInv', this)"><span class="nav-icon">🎒</span>Инвентарь</button>
+    <button class="nav-item" onclick="switchMainTab('tabGames', this)"><span class="nav-icon">🕹️</span>Аркады</button>
+    <button class="nav-item" onclick="switchMainTab('tabUpgrades', this)"><span class="nav-icon">⭐</span>Апгрейд</button>
+    <button class="nav-item" onclick="switchMainTab('tabQuests', this)"><span class="nav-icon">🏆</span>Квесты</button>
   </div>
 
   <!-- Модалки -->
-  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
 
   <div class="modal-sheet" id="winModal">
     <div id="winModalIcon" style="font-size: 45px; margin-bottom: 4px;">🎁</div>
     <div class="modal-title" id="winModalTitle">Приз получен!</div>
     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Отправить в инвентарь или продать?</p>
-    <button class="btn-action" id="claimInvBtn" style="width:100%; margin-bottom: 8px;">🎒 В инвентарь</button>
-    <button class="btn-action btn-secondary" id="sellImmBtn" style="width:100%; margin:0;">⭐ Продать</button>
+    <button class="btn-action" style="width:100%; margin-bottom: 8px;" onclick="claimPrizeToInventory()">🎒 В инвентарь</button>
+    <button class="btn-action btn-secondary" style="width:100%; margin:0;" id="winModalSellBtn" onclick="sellPrizeImmediately()">⭐ Продать</button>
   </div>
 
   <div class="modal-sheet" id="depositModal">
@@ -344,26 +349,26 @@
     <p style="color: var(--text-muted); font-size: 12px; text-align: left; margin-bottom: 4px;">Сумма в Telegram Stars:</p>
     <input type="number" id="depositInput" class="input-deposit" value="50" min="1">
     <div class="quick-amounts-grid">
-      <button class="quick-num-btn" data-val="10">10</button>
-      <button class="quick-num-btn" data-val="50">50</button>
-      <button class="quick-num-btn" data-val="100">100</button>
-      <button class="quick-num-btn" data-val="500">500</button>
+      <button class="quick-num-btn" onclick="setDepositVal(10)">10</button>
+      <button class="quick-num-btn" onclick="setDepositVal(50)">50</button>
+      <button class="quick-num-btn" onclick="setDepositVal(100)">100</button>
+      <button class="quick-num-btn" onclick="setDepositVal(500)">500</button>
     </div>
-    <button class="btn-action" id="proceedPayBtn" style="width:100%; margin-bottom: 6px;">Оплатить через Telegram</button>
-    <button class="modal-close-btn" id="closeDepBtn">Отмена</button>
+    <button class="btn-action" style="width:100%; margin-bottom: 6px;" onclick="proceedToPayment()">Оплатить через Telegram</button>
+    <button class="modal-close-btn" onclick="closeAllModals()">Отмена</button>
   </div>
 
   <div class="modal-sheet" id="dailyModal">
     <div class="modal-title">Ежедневный бонус 🎁</div>
     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">Заходите каждый день и получайте бесплатные звезды!</p>
-    <button class="btn-action" id="claimDailyBtn" style="width:100%; margin-bottom: 6px;">Забрать 20 ⭐</button>
-    <button class="modal-close-btn" id="closeDailyBtn">Закрыть</button>
+    <button class="btn-action" style="width:100%; margin-bottom: 6px;" onclick="claimDailyBonus()">Забрать 20 ⭐</button>
+    <button class="modal-close-btn" onclick="closeAllModals()">Закрыть</button>
   </div>
 
   <div class="modal-sheet" id="historyModal">
     <div class="modal-title">История транзакций 📜</div>
     <div id="historyListContainer" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;"></div>
-    <button class="modal-close-btn" id="closeHistBtn">Закрыть</button>
+    <button class="modal-close-btn" onclick="closeAllModals()">Закрыть</button>
   </div>
 
   <script>
@@ -386,17 +391,4 @@
       playWin() {
         this.init(); if (!this.ctx) return;
         try {
-          const now = this.ctx.currentTime;
-          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
-            const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-            osc.frequency.setValueAtTime(f, now + i*0.07); gain.gain.setValueAtTime(0.08, now + i*0.07);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.07 + 0.25);
-            osc.connect(gain); gain.connect(this.ctx.destination);
-            osc.start(now + i*0.07); osc.stop(now + i*0.07 + 0.25);
-          });
-        } catch(e){}
-      }
-      playExplosion() {
-        this.init(); if (!this.ctx) return;
-        try {
-          const size = 
+          const now 
