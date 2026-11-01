@@ -1,1 +1,158 @@
+$("spinStatus").textContent =
+        ${prize.icon} ${prize.name}!  +
+        (prize.value > 0
+          ? Предмет оценён в ${prize.value} ⭐.  +
+            Результат ставки: ${net >= 0 ? "+" : ""}${net} ⭐.
+          : Ставка ${bet} ⭐ потеряна.);
 
+      spinning = false;
+      $("spinButton").disabled = false;
+
+      saveState();
+      updateBalance();
+      renderInventory();
+    }, 4600);
+  }
+
+  function renderInventory() {
+    const grid = $("inventoryGrid");
+    grid.innerHTML = "";
+
+    if (state.inventory.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Пока здесь пусто. Колесо ждёт тебя...";
+      grid.appendChild(empty);
+      return;
+    }
+
+    [...state.inventory].reverse().forEach(item => {
+      const card = document.createElement("div");
+      card.className = "item";
+
+      const icon = document.createElement("div");
+      icon.className = "item-icon";
+      icon.textContent = item.icon;
+
+      const name = document.createElement("div");
+      name.className = "item-name";
+      name.textContent = item.name;
+
+      const price = document.createElement("div");
+      price.className = "item-price";
+      price.textContent = Продажа: ${item.value} ⭐;
+
+      const sell = document.createElement("button");
+      sell.className = "button secondary";
+      sell.textContent = "Продать";
+
+      sell.addEventListener("click", () => {
+        const index = state.inventory.findIndex(x => x.id === item.id);
+        if (index < 0) return;
+
+        const sold = state.inventory.splice(index, 1)[0];
+        state.balance += sold.value;
+
+        saveState();
+        updateBalance();
+        renderInventory();
+      });
+
+      card.append(icon, name, price, sell);
+      grid.appendChild(card);
+    });
+  }
+
+  function stopCurseTimers() {
+    if (curseTimer !== null) {
+      clearTimeout(curseTimer);
+      curseTimer = null;
+    }
+
+    if (curseAnimation !== null) {
+      cancelAnimationFrame(curseAnimation);
+      curseAnimation = null;
+    }
+  }
+
+  function setCurseStatus(text) {
+    $("curseStatus").textContent = text;
+  }
+
+  function startCurse() {
+    if (curseRound) return;
+
+    const bet = Number($("curseBet").value);
+
+    if (!Number.isFinite(bet)  !Number.isInteger(bet) 
+        bet < 1 || bet > 1000) {
+      setCurseStatus("Ставка должна быть от 1 до 1000 ⭐.");
+      return;
+    }
+
+    if (bet > state.balance) {
+      setCurseStatus("Недостаточно звёзд.");
+      return;
+    }
+
+    state.balance -= bet;
+    saveState();
+    updateBalance();
+
+    /*
+      Случайный момент появления призрака: 0–15 секунд.
+      Результат выбирается в начале раунда и не зависит от кнопок.
+      Это только клиентский прототип, а не защищённая серверная игра.
+    */
+    const crashAfter = randomInt(15001);
+    const startedAt = performance.now();
+
+    curseRound = {
+      bet,
+      crashAt: startedAt + crashAfter,
+      startedAt,
+      multiplier: 1
+    };
+
+    $("curseStart").disabled = true;
+    $("cashoutButton").disabled = false;
+    $("ghostScene").classList.remove("scary");
+    $("ghostIcon").textContent = "👻";
+    setCurseStatus("Он где-то рядом... Забирай, пока можешь.");
+
+    function animate(now) {
+      if (!curseRound) return;
+
+      if (now >= curseRound.crashAt) {
+        loseCurseRound();
+        return;
+      }
+
+      const elapsed = (now - curseRound.startedAt) / 1000;
+
+      // Умеренный рост множителя.
+      const multiplier = 1 + elapsed * 0.24;
+
+      curseRound.multiplier = multiplier;
+      $("multiplier").textContent = x${multiplier.toFixed(2)};
+
+      curseAnimation = requestAnimationFrame(animate);
+    }
+
+    curseAnimation = requestAnimationFrame(animate);
+    curseTimer = setTimeout(loseCurseRound, crashAfter);
+  }
+
+  function cashoutCurse() {
+    if (!curseRound) return;
+
+    const now = performance.now();
+
+    // Если момент появления уже наступил, выводить выигрыш нельзя.
+    if (now >= curseRound.crashAt) {
+      loseCurseRound();
+      return;
+    }
+
+    const round = curseRound;
+    co
