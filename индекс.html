@@ -1,158 +1,884 @@
-$("spinStatus").textContent =
-        ${prize.icon} ${prize.name}!  +
-        (prize.value > 0
-          ? Предмет оценён в ${prize.value} ⭐.  +
-            Результат ставки: ${net >= 0 ? "+" : ""}${net} ⭐.
-          : Ставка ${bet} ⭐ потеряна.);
 
-      spinning = false;
-      $("spinButton").disabled = false;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Casino — Игровой мир</title>
+<style>
+:root {
+  --bg: #090d1b;
+  --panel: #151d32;
+  --panel2: #1c2942;
+  --accent: #8b70ff;
+  --gold: #ffd45c;
+  --text: #f4f5ff;
+  --muted: #9ba8c5;
+  --green: #46d99a;
+  --red: #ff657b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #20264b, var(--bg) 65%);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+button, input { font: inherit; }
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, #8d72ff, #6348dc);
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+button:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+}
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  color: white;
+  background: #0d1427;
+  border: 1px solid #384463;
+  border-radius: 10px;
+  outline: none;
+}
+input:focus { border-color: var(--accent); }
+header {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.logo {
+  font-size: 25px;
+  font-weight: 900;
+  color: var(--gold);
+}
+.balance {
+  background: var(--panel);
+  padding: 13px 20px;
+  border: 1px solid #34415f;
+  border-radius: 14px;
+  font-size: 19px;
+  font-weight: bold;
+}
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 18px 40px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.tab {
+  background: var(--panel);
+  border: 1px solid #34415f;
+}
+.tab.active { background: #6348dc; }
+.section {
+  display: none;
+  background: rgba(21,29,50,.94);
+  border: 1px solid #34415f;
+  padding: 24px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.section.active { display: block; }
+h2 { margin-top: 0; }
+.muted { color: var(--muted); }
+.center { text-align: center; }
+.wheel-area {
+  display: flex;
+  justify-content: center;
+  margin: 30px auto;
+  position: relative;
+  width: min(340px, 85vw);
+}
+.pointer {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: var(--gold);
+  font-size: 34px;
+}
+.wheel {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 9px solid #e6c45b;
+  background: conic-gradient(
+    #684bd9 0deg 45deg,
+    #e65f8d 45deg 90deg,
+    #278eae 90deg 135deg,
+    #d28c38 135deg 180deg,
+    #684bd9 180deg 225deg,
+    #e65f8d 225deg 270deg,
+    #278eae 270deg 315deg,
+    #d28c38 315deg 360deg
+  );
+  box-shadow: 0 0 35px #7459ff55, inset 0 0 20px #0008;
+  position: relative;
+  transition: transform 4.5s cubic-bezier(.12,.72,.12,1);
+}
+.wheel-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 45%;
+  height: 25px;
+  margin-top: -12px;
+  transform-origin: 0 50%;
+  font-size: 19px;
+  text-align: right;
+  padding-right: 8px;
+}
+.wheel-center {
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  background: #171c35;
+  border: 5px solid var(--gold);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 2;
+}
+.controls {
+  max-width: 320px;
+  margin: 20px auto;
+  display: grid;
+  gap: 12px;
+}
+.status {
+  min-height: 48px;
+  padding: 14px;
+  background: #0d1427;
+  border-radius: 12px;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 15px;
+  line-height: 1.5;
+}
+.inventory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(155px,1fr));
+  gap: 14px;
+}
+.item {
+  background: var(--panel2);
+  padding: 16px;
+  border: 1px solid #394969;
+  border-radius: 15px;
+  text-align: center;
+}
+.item-icon { font-size: 38px; }
+.item-name { font-weight: bold; margin: 9px 0; }
+.item-price { color: var(--gold); margin-bottom: 12px; }
+.item button { width: 100%; }
+.secondary { background: #35415d; }
+.danger { background: #a83951; }
+.ghost-scene {
+  background: radial-gradient(circle, #373052, #0c1224 70%);
+  border-radius: 20px;
+  padding: 30px 12px;
+  margin: 20px 0;
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  transition: .3s;
+}
+.ghost-icon {
+  font-size: 85px;
+  filter: drop-shadow(0 0 20px #b49aff);
+  animation: float 2s ease-in-out infinite;
+}
+.ghost-scene.scary {
+  background: radial-gradient(circle, #8e193d, #160714 75%);
+}
+.ghost-scene.scary .ghost-icon {
+  filter: drop-shadow(0 0 25px red);
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-13px); }
+}
+.multiplier {
+  font-size: 42px;
+  color: var(--gold);
+  font-weight: 900;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.stat {
+  background: var(--panel2);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+}
+.stat strong {
+  display: block;
+  font-size: 22px;
+  margin-top: 8px;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media(max-width:500px) {
+  .section { padding: 17px; }
+  header { padding: 17px; }
+  .logo { font-size: 21px; }
+  button { padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⭐ STAR CASINO</div>
+  <div class="balance">⭐ <span id="balance">1000</span></div>
+</header>
+
+<main>
+  <nav class="tabs">
+    <button class="tab active" data-tab="wheel">🎰 Колесо</button>
+    <button class="tab" data-tab="curse">👻 Проклятие</button>
+    <button class="tab" data-tab="inventory">🎒 Инвентарь</button>
+    <button class="tab" data-tab="stats">📊 Статистика</button>
+  </nav>
+
+  <section class="section active" id="wheel">
+    <h2 class="center">🎰 Колесо удачи</h2>
+    <p class="muted center">Крути колесо и получай коллекционные предметы!</p>
+
+    <div class="wheel-area">
+      <div class="pointer">▼</div>
+      <div class="wheel" id="wheelGraphic">
+        <div class="wheel-label" style="transform:rotate(22.5deg)">💎</div>
+        <div class="wheel-label" style="transform:rotate(67.5deg)">🎁</div>
+        <div class="wheel-label" style="transform:rotate(112.5deg)">👑</div>
+        <div class="wheel-label" style="transform:rotate(157.5deg)">💰</div>
+        <div class="wheel-label" style="transform:rotate(202.5deg)">⭐</div>
+        <div class="wheel-label" style="transform:rotate(247.5deg)">🔥</div>
+        <div class="wheel-label" style="transform:rotate(292.5deg)">🪙</div>
+        <div class="wheel-label" style="transform:rotate(337.5deg)">❌</div>
+        <div class="wheel-center"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <label>Ставка (1–1000 ⭐)</label>
+      <input id="wheelBet" type="number" min="1" max="1000" value="50">
+      <button id="spinButton">🎰 КРУТИТЬ КОЛЕСО</button>
+    </div>
+    <div class="status" id="spinStatus">Готов к игре? Испытай удачу!</div>
+  </section>
+
+  <section class="section" id="curse">
+    <h2 class="center">👻 Проклятие</h2>
+    <p class="muted center">
+      Множитель растёт каждую секунду. Забери выигрыш до появления призрака!
+    </p>
+
+    <div class="ghost-scene" id="ghostScene">
+      <div class="ghost-icon" id="ghostIcon">👻</div>
+    </div>
+
+    <div class="center">
+      <div class="multiplier" id="multiplier">x1.00</div>
+      <div class="muted">Текущий множитель</div>
+    </div>
+
+    <div class="controls">
+      <label>Ставка (1–1000 ⭐)</label>
+      <input id="curseBet" type="number" min="1" max="1000" value="50">
+      <button id="curseStart">👻 НАЧАТЬ РАУНД</button>
+      <button id="cashoutButton" disabled>💰 ЗАБРАТЬ ВЫИГРЫШ</button>
+    </div>
+
+    <div class="status" id="curseStatus">Призрак уже близко...</div>
+  </section>
+
+  <section class="section" id="inventory">
+    <h2>🎒 Мой инвентарь</h2>
+    <p class="muted">Продавай предметы и получай за них звёзды.</p>
+    <div class="status" id="inventoryCount">Предметов: 0</div>
+    <div class="inventory" id="inventoryGrid"></div>
+  </section>
+
+  <section class="section" id="stats">
+    <h2>📊 Статистика</h2>
+    <div class="stats">
+      <div class="stat">Всего вращений<strong id="statSpins">0</strong></div>
+      <div class="stat">Раундов проклятия<strong id="statCurse">0</strong></div>
+      <div class="stat">Продано предметов<strong id="statSold">0</strong></div>
+      <div class="stat">Заработано ⭐<strong id="statEarned">0</strong></div>
+    </div>
+    <button class="danger" id="resetButton">Сбросить весь прогресс</button>
+  </section>
+</main>
+
+<footer>
+  STAR CASINO • Виртуальная игровая валюта • Результаты сохраняются в браузере
+</footer>
+
+<script>
+"use strict";
+
+/* =========================
+   НАСТРОЙКИ И ПРИЗЫ
+========================= */
+
+const STORAGE_KEY = "star_casino_v2";
+
+const prizes = [
+  { icon: "💎", name: "Алмаз", value: 250, weight: 5 },
+  { icon: "🎁", name: "Подарок", value: 100, weight: 12 },
+  { icon: "👑", name: "Корона", value: 500, weight: 2 },
+  { icon: "💰", name: "Мешок монет", value: 150, weight: 9 },
+  { icon: "⭐", name: "Звезда", value: 50, weight: 20 },
+  { icon: "🔥", name: "Огненный кристалл", value: 300, weight: 4 },
+  { icon: "🪙", name: "Монета", value: 25, weight: 28 },
+  { icon: "❌", name: "Пустой приз", value: 0, weight: 20 }
+];
+
+const DEFAULT_STATE = {
+  balance: 1000,
+  inventory: [],
+  stats: {
+    spins: 0,
+    curseRounds: 0,
+    sold: 0,
+    earned: 0
+  },
+  nextId: 1
+};
+
+let state = loadState();
+let spinning = false;
+let curseRound = null;
+let curseTimer = null;
+let curseAnimation = null;
+let wheelRotation = 0;
+
+/* =========================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+========================= */
+
+const $ = id => document.getElementById(id);
+
+function randomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function formatNumber(value) {
+  return Math.floor(value).toLocaleString("ru-RU");
+}
+
+function validNumber(value) {
+  return Number.isFinite(value) && Number.isInteger(value);
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_STATE);
+
+    const saved = JSON.parse(raw);
+
+    if (
+      !saved ||
+      !Number.isSafeInteger(saved.balance) ||
+      saved.balance < 0 ||
+      !Array.isArray(saved.inventory)
+    ) {
+      return structuredClone(DEFAULT_STATE);
+    }
+
+    const result = {
+      balance: Math.min(saved.balance, 1_000_000_000),
+      inventory: saved.inventory
+        .filter(item =>
+          item &&
+          typeof item.id === "number" &&
+          typeof item.name === "string" &&
+          typeof item.icon === "string" &&
+          Number.isSafeInteger(item.value) &&
+          item.value >= 0
+        )
+        .slice(0, 10000),
+      stats: {
+        spins: 0,
+        curseRounds: 0,
+        sold: 0,
+        earned: 0,
+        ...(saved.stats || {})
+      },
+      nextId: Number.isSafeInteger(saved.nextId) && saved.nextId > 0
+        ? saved.nextId : 1
+    };
+
+    for (const key of ["spins", "curseRounds", "sold", "earned"]) {
+      if (!Number.isSafeInteger(result.stats[key]) || result.stats[key] < 0) {
+        result.stats[key] = 0;
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.warn("Не удалось загрузить сохранение:", error);
+    return structuredClone(DEFAULT_STATE);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch (error) {
+    console.error("Ошибка сохранения:", error);
+    return false;
+  }
+}
+
+function updateBalance() {
+  $("balance").textContent = formatNumber(state.balance);
+}
+
+function setStatus(id, message) {
+  $(id).textContent = message;
+}
+
+function getBet(inputId) {
+  const bet = Number($(inputId).value);
+
+  if (!validNumber(bet) || bet < 1 || bet > 1000) {
+    return { valid: false, message: "Ставка должна быть целым числом от 1 до 1000 ⭐." };
+  }
+
+  if (bet > state.balance) {
+    return { valid: false, message: "Недостаточно звёзд на балансе." };
+  }
+
+  return { valid: true, bet };
+}
+
+function addItem(prize) {
+  if (prize.value <= 0) return;
+
+  state.inventory.push({
+    id: state.nextId++,
+    icon: prize.icon,
+    name: prize.name,
+    value: prize.value
+  });
+}
+
+function weightedPrize() {
+  const total = prizes.reduce((sum, prize) => sum + prize.weight, 0);
+  let random = Math.random() * total;
+
+  for (const prize of prizes) {
+    random -= prize.weight;
+    if (random < 0) return prize;
+  }
+
+  return prizes[prizes.length - 1];
+}
+
+/* =========================
+   НАВИГАЦИЯ
+========================= */
+
+document.querySelectorAll(".tab").forEach(button => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.tab;
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.toggle("active", tab === button);
+    });
+
+    document.querySelectorAll(".section").forEach(section => {
+      section.classList.toggle("active", section.id === target);
+    });
+
+    if (target === "inventory") renderInventory();
+    if (target === "stats") renderStats();
+  });
+});
+
+/* =========================
+   КОЛЕСО УДАЧИ
+========================= */
+
+function spinWheel() {
+  if (spinning) return;
+
+  const check = getBet("wheelBet");
+
+  if (!check.valid) {
+    setStatus("spinStatus", check.message);
+    return;
+  }
+
+  const bet = check.bet;
+
+  spinning = true;
+  $("spinButton").disabled = true;
+
+  state.balance -= bet;
+  state.stats.spins++;
+
+  saveState();
+  updateBalance();
+
+  const prize = weightedPrize();
+  const prizeIndex = prizes.indexOf(prize);
+
+  // Угол сектора: 45 градусов.
+  // Указатель находится сверху, на отметке 270 градусов.
+  const sectorCenter = prizeIndex * 45 + 22.5;
+  const targetAngle = 360 - sectorCenter;
+
+  wheelRotation += 360 * 6 + targetAngle;
+  $("wheelGraphic").style.transform = `rotate(${wheelRotation}deg)`;
+
+  setStatus("spinStatus", "🎰 Колесо вращается...");
+
+  window.setTimeout(() => {
+    const net = prize.value - bet;
+
+    if (prize.value > 0) {
+      addItem(prize);
+      setStatus(
+        "spinStatus",
+        `${prize.icon} ${prize.name}! Предмет оценён в ${prize.value} ⭐. Результат: ${net >= 0 ? "+" : ""}${net} ⭐. Предмет добавлен в инвентарь.`
+      );
+    } else {
+      setStatus(
+        "spinStatus",
+        `❌ Пустой приз. Ставка ${bet} ⭐ потеряна.`
+      );
+    }
+
+    spinning = false;
+    $("spinButton").disabled = false;
+
+    saveState();
+    updateBalance();
+    renderInventory();
+  }, 4600);
+}
+
+$("spinButton").addEventListener("click", spinWheel);
+
+/* =========================
+   ИНВЕНТАРЬ
+========================= */
+
+function renderInventory() {
+  const grid = $("inventoryGrid");
+  grid.replaceChildren();
+
+  $("inventoryCount").textContent =
+    `Предметов: ${state.inventory.length}`;
+
+  if (state.inventory.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Пока здесь пусто. Колесо ждёт тебя...";
+    grid.appendChild(empty);
+    return;
+  }
+
+  [...state.inventory].reverse().forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item";
+
+    const icon = document.createElement("div");
+    icon.className = "item-icon";
+    icon.textContent = item.icon;
+
+    const name = document.createElement("div");
+    name.className = "item-name";
+    name.textContent = item.name;
+
+    const price = document.createElement("div");
+    price.className = "item-price";
+    price.textContent = `Продажа: ${item.value} ⭐`;
+
+    const sell = document.createElement("button");
+    sell.className = "secondary";
+    sell.textContent = "Продать";
+
+    sell.addEventListener("click", () => {
+      const index = state.inventory.findIndex(x => x.id === item.id);
+      if (index < 0) return;
+
+      const sold = state.inventory[index];
+
+      if (state.balance + sold.value > 1_000_000_000) {
+        alert("Достигнут максимальный баланс.");
+        return;
+      }
+
+      state.inventory.splice(index, 1);
+      state.balance += sold.value;
+      state.stats.sold++;
+      state.stats.earned += sold.value;
 
       saveState();
       updateBalance();
       renderInventory();
-    }, 4600);
-  }
-
-  function renderInventory() {
-    const grid = $("inventoryGrid");
-    grid.innerHTML = "";
-
-    if (state.inventory.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.textContent = "Пока здесь пусто. Колесо ждёт тебя...";
-      grid.appendChild(empty);
-      return;
-    }
-
-    [...state.inventory].reverse().forEach(item => {
-      const card = document.createElement("div");
-      card.className = "item";
-
-      const icon = document.createElement("div");
-      icon.className = "item-icon";
-      icon.textContent = item.icon;
-
-      const name = document.createElement("div");
-      name.className = "item-name";
-      name.textContent = item.name;
-
-      const price = document.createElement("div");
-      price.className = "item-price";
-      price.textContent = Продажа: ${item.value} ⭐;
-
-      const sell = document.createElement("button");
-      sell.className = "button secondary";
-      sell.textContent = "Продать";
-
-      sell.addEventListener("click", () => {
-        const index = state.inventory.findIndex(x => x.id === item.id);
-        if (index < 0) return;
-
-        const sold = state.inventory.splice(index, 1)[0];
-        state.balance += sold.value;
-
-        saveState();
-        updateBalance();
-        renderInventory();
-      });
-
-      card.append(icon, name, price, sell);
-      grid.appendChild(card);
+      renderStats();
     });
+
+    card.append(icon, name, price, sell);
+    grid.appendChild(card);
+  });
+}
+
+/* =========================
+   РЕЖИМ ПРОКЛЯТИЯ
+========================= */
+
+function stopCurseTimers() {
+  if (curseTimer !== null) {
+    clearTimeout(curseTimer);
+    curseTimer = null;
   }
 
-  function stopCurseTimers() {
-    if (curseTimer !== null) {
-      clearTimeout(curseTimer);
-      curseTimer = null;
-    }
+  if (curseAnimation !== null) {
+    cancelAnimationFrame(curseAnimation);
+    curseAnimation = null;
+  }
+}
 
-    if (curseAnimation !== null) {
-      cancelAnimationFrame(curseAnimation);
-      curseAnimation = null;
-    }
+function setCurseStatus(message) {
+  setStatus("curseStatus", message);
+}
+
+function startCurse() {
+  if (curseRound) return;
+
+  const check = getBet("curseBet");
+
+  if (!check.valid) {
+    setCurseStatus(check.message);
+    return;
   }
 
-  function setCurseStatus(text) {
-    $("curseStatus").textContent = text;
-  }
+  const bet = check.bet;
 
-  function startCurse() {
-    if (curseRound) return;
+  state.balance -= bet;
+  state.stats.curseRounds++;
 
-    const bet = Number($("curseBet").value);
+  saveState();
+  updateBalance();
 
-    if (!Number.isFinite(bet)  !Number.isInteger(bet) 
-        bet < 1 || bet > 1000) {
-      setCurseStatus("Ставка должна быть от 1 до 1000 ⭐.");
-      return;
-    }
+  // Момент появления призрака определяется в начале раунда.
+  const crashAfter = 3000 + randomInt(12001);
+  const startedAt = performance.now();
 
-    if (bet > state.balance) {
-      setCurseStatus("Недостаточно звёзд.");
-      return;
-    }
+  curseRound = {
+    bet,
+    crashAt: startedAt + crashAfter,
+    startedAt,
+    multiplier: 1,
+    finished: false
+  };
 
-    state.balance -= bet;
-    saveState();
-    updateBalance();
+  $("curseStart").disabled = true;
+  $("cashoutButton").disabled = false;
+  $("ghostScene").classList.remove("scary");
+  $("ghostIcon").textContent = "👻";
+  $("multiplier").textContent = "x1.00";
 
-    /*
-      Случайный момент появления призрака: 0–15 секунд.
-      Результат выбирается в начале раунда и не зависит от кнопок.
-      Это только клиентский прототип, а не защищённая серверная игра.
-    */
-    const crashAfter = randomInt(15001);
-    const startedAt = performance.now();
+  setCurseStatus("Он где-то рядом... Забирай, пока можешь!");
 
-    curseRound = {
-      bet,
-      crashAt: startedAt + crashAfter,
-      startedAt,
-      multiplier: 1
-    };
+  function animate(now) {
+    if (!curseRound || curseRound.finished) return;
 
-    $("curseStart").disabled = true;
-    $("cashoutButton").disabled = false;
-    $("ghostScene").classList.remove("scary");
-    $("ghostIcon").textContent = "👻";
-    setCurseStatus("Он где-то рядом... Забирай, пока можешь.");
-
-    function animate(now) {
-      if (!curseRound) return;
-
-      if (now >= curseRound.crashAt) {
-        loseCurseRound();
-        return;
-      }
-
-      const elapsed = (now - curseRound.startedAt) / 1000;
-
-      // Умеренный рост множителя.
-      const multiplier = 1 + elapsed * 0.24;
-
-      curseRound.multiplier = multiplier;
-      $("multiplier").textContent = x${multiplier.toFixed(2)};
-
-      curseAnimation = requestAnimationFrame(animate);
-    }
-
-    curseAnimation = requestAnimationFrame(animate);
-    curseTimer = setTimeout(loseCurseRound, crashAfter);
-  }
-
-  function cashoutCurse() {
-    if (!curseRound) return;
-
-    const now = performance.now();
-
-    // Если момент появления уже наступил, выводить выигрыш нельзя.
     if (now >= curseRound.crashAt) {
       loseCurseRound();
       return;
     }
 
-    const round = curseRound;
-    co
+    const elapsed = (now - curseRound.startedAt) / 1000;
+    const multiplier = 1 + elapsed * 0.24;
+
+    curseRound.multiplier = multiplier;
+    $("multiplier").textContent = `x${multiplier.toFixed(2)}`;
+
+    curseAnimation = requestAnimationFrame(animate);
+  }
+
+  curseAnimation = requestAnimationFrame(animate);
+
+  curseTimer = window.setTimeout(() => {
+    loseCurseRound();
+  }, crashAfter);
+}
+
+function finishCurseRound() {
+  if (!curseRound || curseRound.finished) return null;
+
+  const round = curseRound;
+  round.finished = true;
+
+  stopCurseTimers();
+
+  curseRound = null;
+  $("curseStart").disabled = false;
+  $("cashoutButton").disabled = true;
+
+  return round;
+}
+
+function loseCurseRound() {
+  const round = finishCurseRound();
+  if (!round) return;
+
+  $("ghostScene").classList.add("scary");
+  $("ghostIcon").textContent = "💀";
+  $("multiplier").textContent = "💥";
+
+  setCurseStatus(
+    `Призрак поймал тебя! Ставка ${round.bet} ⭐ потеряна.`
+  );
+
+  saveState();
+  updateBalance();
+}
+
+function cashoutCurse() {
+  if (!curseRound) return;
+
+  const now = performance.now();
+
+  // После наступления времени проигрыша выигрыш забрать нельзя.
+  if (now >= curseRound.crashAt) {
+    loseCurseRound();
+    return;
+  }
+
+  const round = finishCurseRound();
+  if (!round) return;
+
+  const multiplier = round.multiplier;
+  const payout = Math.floor(round.bet * multiplier);
+
+  if (state.balance + payout > 1_000_000_000) {
+    setCurseStatus("Достигнут максимальный баланс.");
+    return;
+  }
+
+  state.balance += payout;
+  state.stats.earned += Math.max(0, payout - round.bet);
+
+  $("ghostScene").classList.remove("scary");
+  $("ghostIcon").textContent = "😎";
+
+  setCurseStatus(
+    `Ты успел! Выигрыш: ${payout} ⭐. Множитель: x${multiplier.toFixed(2)}.`
+  );
+
+  saveState();
+  updateBalance();
+}
+
+$("curseStart").addEventListener("click", startCurse);
+$("cashoutButton").addEventListener("click", cashoutCurse);
+
+/* =========================
+   СТАТИСТИКА
+========================= */
+
+function renderStats() {
+  $("statSpins").textContent = formatNumber(state.stats.spins);
+  $("statCurse").textContent = formatNumber(state.stats.curseRounds);
+  $("statSold").textContent = formatNumber(state.stats.sold);
+  $("statEarned").textContent = formatNumber(state.stats.earned);
+}
+
+/* =========================
+   СБРОС ПРОГРЕССА
+========================= */
+
+$("resetButton").addEventListener("click", () => {
+  const confirmed = confirm(
+    "Ты действительно хочешь удалить весь прогресс? Это действие нельзя отменить."
+  );
+
+  if (!confirmed) return;
+
+  stopCurseTimers();
+  curseRound = null;
+  spinning = false;
+
+  state = structuredClone(DEFAULT_STATE);
+
+  $("spinButton").disabled = false;
+  $("curseStart").disabled = false;
+  $("cashoutButton").disabled = true;
+
+  $("wheelGraphic").style.transition = "none";
+  $("wheelGraphic").style.transform = "rotate(0deg)";
+  wheelRotation = 0;
+
+  requestAnimationFrame(() => {
+    $("wheelGraphic").style.transition =
+      "transform 4.5s cubic-bezier(.12,.72,.12,1)";
+  });
+
+  $("ghostScene").classList.remove("scary");
+  $("ghostIcon").textContent = "👻";
+  $("multiplier").textContent = "x1.00";
+
+  setStatus("spinStatus", "Прогресс сброшен. Начинай заново!");
+  setCurseStatus("Призрак уже близко...");
+
+  saveState();
+  updateBalance();
+  renderInventory();
+  renderStats();
+});
+
+/* =========================
+   ЗАПУСК
+========================= */
+
+updateBalance();
+renderInventory();
+renderStats();
+</script>
+</body>
+</html>
